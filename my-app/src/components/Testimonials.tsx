@@ -7,47 +7,49 @@ const testimonials = [
     name: "Alex Johnson",
     role: "Senior Architect",
     text: "One of the best .NET developers I've worked with. Their understanding of Microservices is top-notch.",
-    color: "#e0f2fe", // Blue
+    color: "#e0f2fe",
   },
   {
     id: 2,
     name: "Sarah Williams",
     role: "Product Manager",
     text: "Delivered the Azure migration 2 weeks ahead of schedule. Highly recommended.",
-    color: "#fef3c7", // Yellow
+    color: "#fef3c7",
   },
   {
     id: 3,
     name: "Michael Chen",
     role: "Tech Lead",
     text: "Incredible attention to detail in the frontend. The 3D interactions were smooth and bug-free.",
-    color: "#dcfce7", // Green
+    color: "#dcfce7",
   },
   {
     id: 4,
     name: "Emily Davis",
     role: "CTO",
     text: "A true full-stack talent. Can handle DB optimization and React animations with equal ease.",
-    color: "#fce7f3", // Pink
+    color: "#fce7f3",
   },
 ];
 
-// Animation Logic:
-// 'offscreen': State before the card appears (pushed down 100px)
-// 'onscreen': State when visible (slides up to 0)
 const cardVariants: Variants = {
+  // State when the card is NOT fully in view (e.g. scrolling up/away)
   offscreen: {
-    y: 150,
+    y: 20, // Pushes the card down further
     opacity: 0,
     scale: 0.9,
+    transition: {
+      duration: 0.5,
+    }
   },
+  // State when the card IS in view (stacking)
   onscreen: {
     y: 0,
     opacity: 1,
     scale: 1,
     transition: {
       type: "spring",
-      bounce: 0.2, // Adds a little "bouncy" feel when it stacks
+      bounce: 0.2, // increased bounce for lively feel
       duration: 0.8
     }
   }
@@ -64,13 +66,15 @@ const Testimonials = () => {
             key={t.id}
             initial="offscreen"
             whileInView="onscreen"
-            viewport={{ once: true, amount: 0.4 }} // Trigger when 40% of card is visible
+            // once: false -> ensures animation replays every time it enters/leaves view
+            // amount: 0.8 -> triggers only when 80% of the card is visible (prevents early triggering)
+            viewport={{ once: false, amount: 0.8 }} 
             variants={cardVariants}
             style={{
               ...cardStyle,
               backgroundColor: t.color,
               zIndex: index, 
-              // The negative margin pulls the next card UP to cover the previous one
+              // Negative margin to create the visual stack
               marginTop: index === 0 ? 0 : '-150px', 
             }}
           >
@@ -86,12 +90,12 @@ const Testimonials = () => {
   );
 };
 
-// --- Styles ---
+// --- Styles (Unchanged) ---
 
 const containerStyle: CSSProperties = {
   padding: '100px 20px',
   background: '#111',
-  minHeight: '100vh', // Ensure enough scroll space
+  minHeight: '100vh', 
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -101,7 +105,7 @@ const deckContainerStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  paddingBottom: '200px', // Extra space at bottom for scrolling
+  paddingBottom: '200px', 
 };
 
 const headerStyle: CSSProperties = {
