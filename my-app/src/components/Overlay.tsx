@@ -1,3 +1,5 @@
+import Testimonials from "./Testimonials";
+
 const Overlay = () => {
   return (
     <div style={{ width: '100%', pointerEvents: 'none' }}>
@@ -38,6 +40,11 @@ const Overlay = () => {
           </div>
         </div>
       </section>
+
+      {/* SECTION 3: Testimonials (NEW) */}
+      <div style={{ pointerEvents: 'auto' }}>
+         <Testimonials />
+      </div>
 
       {/* SECTION 3: Contact */}
       <section style={{ height: '100vh', background: '#111', color: 'white', padding: '100px' }}>

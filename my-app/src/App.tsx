@@ -17,7 +17,7 @@ function App() {
         {/* pages={3}: Defines how long the scroll page is (300vh).
           damping={0.25}: Adds "weight" to the scroll for smoothness.
         */}
-        <ScrollControls pages={3} damping={0.25}>
+        <ScrollControls pages={6} damping={0.25}>
           
           {/* Layer 1: The 3D Content */}
           <Experience />
