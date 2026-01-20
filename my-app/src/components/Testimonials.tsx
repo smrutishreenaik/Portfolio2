@@ -58,12 +58,19 @@ const Testimonials = () => {
       // The 'true' at the end prevents the value from going back to 0 if you scroll past it
       const range = scroll.range(cardStart, 1 / 8);
 
-      // 3. Map the range to pixel movement
-      // Start: 100vh (offscreen bottom), End: 0vh (center screen)
-      const translateY = (1 - range) * 100;
+      // New Logic:
+      // 1. Define the gap (e.g., 3vh or about 30px)
+      const gap = 3;
 
-      // 4. Apply styles directly for high performance (no React re-renders)
-      card.style.transform = `translateY(${translateY}vh) scale(${1 - index * 0.05})`;
+      // 2. Calculate offset: Card 0 -> 0vh, Card 1 -> 3vh, Card 2 -> 6vh
+      const offset = index * gap;
+
+      // 3. Adjust calculation:
+      // When range is 1 (fully scrolled), the card lands at 'offset' instead of 0.
+      // We start from 100vh (bottom) + offset.
+      const translateY = (1 - range) * 100 + offset;
+
+      card.style.transform = `translateY(${translateY}vh)`;
       card.style.opacity = `${range}`; // Fade in as it slides up
     });
   });
