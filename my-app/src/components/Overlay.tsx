@@ -1,9 +1,7 @@
-import Testimonials from './Testimonials';
-
 const Overlay = () => {
   return (
     <div style={{ width: '100%', pointerEvents: 'none' }}>
-      {/* SECTION 1: The "Screen" area (Empty to let 3D show) */}
+      {/* SECTION 1: Intro (Page 0) */}
       <section
         style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
@@ -20,46 +18,34 @@ const Overlay = () => {
         </h1>
       </section>
 
-      {/* SECTION 2: Your Actual Portfolio Content */}
+      {/* SECTION 2: Portfolio Content (Page 1) */}
       <section
-        style={{
-          height: '100vh',
-          background: 'white',
-          padding: '100px',
-          pointerEvents: 'auto', // Re-enable clicks
-        }}
+        style={{ height: '100vh', background: 'white', padding: '100px', pointerEvents: 'auto' }}
       >
         <h2 style={{ fontSize: '3rem', color: '#333' }}>Hello, I'm a Full Stack Dev.</h2>
         <p style={{ fontSize: '1.2rem', color: '#666', marginTop: '20px' }}>
           I build scalable applications with <b>.NET Core</b> and <b>React</b>.
         </p>
-
-        <div
-          style={{
-            marginTop: '50px',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '20px',
-          }}
-        >
-          <div style={{ padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-            <h3>Backend Mastery</h3>
-            <p>C#, Microservices, Azure, SQL Server</p>
-          </div>
-          <div style={{ padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-            <h3>Frontend Magic</h3>
-            <p>React, TypeScript, Three.js, Tailwind</p>
-          </div>
-        </div>
+        {/* ... your grid items ... */}
       </section>
 
-      {/* SECTION 3: Testimonials (NEW) */}
-      <div style={{ pointerEvents: 'auto' }}>
-        <Testimonials />
-      </div>
+      {/* --- THE GHOST GAP (CRITICAL) --- 
+          This creates empty scroll space for the Testimonials to play.
+          Since Testimonials run from Page 2 to Page 6 (startPage 2 + pinLength 4),
+          we need a gap of roughly 400vh-500vh here.
+      */}
+      <section style={{ height: '500vh' }}>{/* This section is intentionally empty */}</section>
 
-      {/* SECTION 3: Contact */}
-      <section style={{ height: '100vh', background: '#111', color: 'white', padding: '100px' }}>
+      {/* SECTION 3: Contact (Page 6+) */}
+      <section
+        style={{
+          height: '100vh',
+          background: '#111',
+          color: 'white',
+          padding: '100px',
+          pointerEvents: 'auto',
+        }}
+      >
         <h2>Let's work together.</h2>
       </section>
     </div>
