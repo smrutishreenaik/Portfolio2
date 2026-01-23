@@ -58,7 +58,7 @@ const Testimonials = () => {
         containerRef.current.style.pointerEvents = 'none';
       } else {
         containerRef.current.style.opacity = '1';
-        containerRef.current.style.pointerEvents = 'auto';
+        containerRef.current.style.pointerEvents = 'none';
       }
     }
 
