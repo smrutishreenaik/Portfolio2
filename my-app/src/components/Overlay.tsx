@@ -32,6 +32,16 @@ const Overlay = () => {
       {/* 3 pages duration = 300vh height */}
       <section style={{ height: '300vh' }} />
 
+      {/* --- NEW BUFFER GAP (Page 5-6) --- */}
+      {/* This empty space prevents the overlap! */}
+      <section style={{ height: '100vh' }} />
+
+      {/* 3. Experience Gap (Pages 6-9) */}
+      <section style={{ height: '300vh' }} />
+
+      {/* --- BUFFER GAP (Page 9-10) --- */}
+      <section style={{ height: '100vh' }} />
+
       {/* 4. GHOST GAP FOR TESTIMONIALS (Page 5-9) */}
       {/* 4 pages duration = 400vh height */}
       <section style={{ height: '400vh' }} />

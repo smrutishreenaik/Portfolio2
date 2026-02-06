@@ -4,6 +4,7 @@ import Experience from './components/Experience';
 import Overlay from './components/Overlay';
 import Testimonials from './components/Testimonials';
 import Projects from './components/Projects';
+import ExperienceLadder from './components/ExperienceLadder';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <directionalLight position={[10, 10, 5]} intensity={1} />
 
         {/* Increase pages to accommodate the "Stop" duration */}
-        <ScrollControls pages={10} damping={0.3}>
+        <ScrollControls pages={18} damping={0.3}>
           <Experience />
 
           {/* 1. The Normal HTML Content (Intro, About, etc.) */}
@@ -22,6 +23,8 @@ function App() {
           </Scroll>
 
           <Projects />
+
+          <ExperienceLadder />
 
           <Testimonials />
         </ScrollControls>
