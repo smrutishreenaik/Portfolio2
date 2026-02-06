@@ -1,7 +1,9 @@
+// src/components/Overlay.tsx
+
 const Overlay = () => {
   return (
     <div style={{ width: '100%', pointerEvents: 'none' }}>
-      {/* SECTION 1: Intro (Page 0) */}
+      {/* 1. INTRO (Page 0-1) */}
       <section
         style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
@@ -18,25 +20,23 @@ const Overlay = () => {
         </h1>
       </section>
 
-      {/* SECTION 2: Portfolio Content (Page 1) */}
+      {/* 2. BIO (Page 1-2) */}
       <section
         style={{ height: '100vh', background: 'white', padding: '100px', pointerEvents: 'auto' }}
       >
         <h2 style={{ fontSize: '3rem', color: '#333' }}>Hello, I'm a Full Stack Dev.</h2>
-        <p style={{ fontSize: '1.2rem', color: '#666', marginTop: '20px' }}>
-          I build scalable applications with <b>.NET Core</b> and <b>React</b>.
-        </p>
-        {/* ... your grid items ... */}
+        {/* ... content ... */}
       </section>
 
-      {/* --- THE GHOST GAP (CRITICAL) --- 
-          This creates empty scroll space for the Testimonials to play.
-          Since Testimonials run from Page 2 to Page 6 (startPage 2 + pinLength 4),
-          we need a gap of roughly 400vh-500vh here.
-      */}
-      <section style={{ height: '500vh' }}>{/* This section is intentionally empty */}</section>
+      {/* 3. GHOST GAP FOR PROJECTS (Page 2-5) */}
+      {/* 3 pages duration = 300vh height */}
+      <section style={{ height: '300vh' }} />
 
-      {/* SECTION 3: Contact (Page 6+) */}
+      {/* 4. GHOST GAP FOR TESTIMONIALS (Page 5-9) */}
+      {/* 4 pages duration = 400vh height */}
+      <section style={{ height: '400vh' }} />
+
+      {/* 5. CONTACT (Page 9+) */}
       <section
         style={{
           height: '100vh',

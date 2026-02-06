@@ -3,6 +3,7 @@ import { ScrollControls, Scroll } from '@react-three/drei';
 import Experience from './components/Experience';
 import Overlay from './components/Overlay';
 import Testimonials from './components/Testimonials';
+import Projects from './components/Projects';
 
 function App() {
   return (
@@ -20,9 +21,8 @@ function App() {
             <Overlay />
           </Scroll>
 
-          {/* 2. The Testimonials (OUTSIDE <Scroll html>) 
-             This allows us to "Pin" it to the screen while scrolling happens in background 
-          */}
+          <Projects />
+
           <Testimonials />
         </ScrollControls>
       </Canvas>
