@@ -13,8 +13,8 @@ const Bio = () => {
   useFrame(() => {
     // --- SETTINGS ---
     const totalPages = 20;
-    const startPage = 1; // Starts after Intro
-    const duration = 1; // Lasts for 1 page
+    const startPage = 1; // Active start
+    const duration = 1; // Active duration
     // ----------------
 
     const start = startPage / totalPages;
@@ -23,50 +23,63 @@ const Bio = () => {
     if (containerRef.current) {
       const scrollOffset = scroll.offset;
 
-      // 1. CONTAINER VISIBILITY (Fade the White Background In/Out)
+      // We assume the entrance takes 1 full page (Page 0 to 1)
+      const entranceStart = (startPage - 1) / totalPages;
+
+      // We assume exit takes 1 full page (Page 2 to 3)
+      const exitEnd = (startPage + duration + 1) / totalPages;
+
+      // ============================================
+      // 1. SLIDING LOGIC (Transform Y)
+      // ============================================
+
       if (scrollOffset < start) {
-        // Entrance: Fade white page in over the 3D scene
-        const entranceStart = (startPage - 0.5) / totalPages;
-        const progress = (scrollOffset - entranceStart) / (start - entranceStart);
-
-        containerRef.current.style.display = 'flex';
-        containerRef.current.style.opacity = `${Math.max(0, progress)}`;
-        containerRef.current.style.pointerEvents = 'none';
+        // --- ENTRANCE PHASE (Scroll Down -> Slides Up from Bottom) ---
+        if (scrollOffset < entranceStart) {
+          // Before entrance: Hide below screen
+          containerRef.current.style.transform = 'translateY(100vh)';
+        } else {
+          // Sliding In: Interpolate from 100vh to 0vh
+          const progress = (scrollOffset - entranceStart) / (start - entranceStart);
+          // progress 0 = 100vh (bottom), progress 1 = 0vh (center)
+          const yPos = (1 - progress) * 100;
+          containerRef.current.style.transform = `translateY(${yPos}vh)`;
+        }
       } else if (scrollOffset > end) {
-        // Exit: Fade white page out
-        const exitEnd = (startPage + duration + 0.5) / totalPages;
-        const progress = (scrollOffset - end) / (exitEnd - end);
-
-        containerRef.current.style.display = 'flex';
-        containerRef.current.style.opacity = `${1 - progress}`;
-        containerRef.current.style.pointerEvents = 'none';
+        // --- EXIT PHASE (Scroll Down -> Slides Up to Top) ---
+        if (scrollOffset > exitEnd) {
+          // After exit: Hide above screen
+          containerRef.current.style.transform = 'translateY(-100vh)';
+        } else {
+          // Sliding Out: Interpolate from 0vh to -100vh
+          const progress = (scrollOffset - end) / (exitEnd - end);
+          const yPos = -progress * 100;
+          containerRef.current.style.transform = `translateY(${yPos}vh)`;
+        }
       } else {
-        // Active: Fully White, Fully Visible
-        containerRef.current.style.display = 'flex';
-        containerRef.current.style.opacity = '1';
-        containerRef.current.style.pointerEvents = 'none';
+        // --- ACTIVE PHASE (Locked on Screen) ---
+        containerRef.current.style.transform = 'translateY(0vh)';
       }
 
-      // 2. TEXT REVEAL ANIMATION
+      // ============================================
+      // 2. TEXT ANIMATION (Same as before)
+      // ============================================
       if (scrollOffset >= start && scrollOffset <= end) {
         const progress = (scrollOffset - start) / (end - start);
         const charsToShow = Math.floor(text.length * progress);
 
         charRefs.current.forEach((char, index) => {
           if (!char) return;
-
           if (index < charsToShow) {
-            // Active: BLACK and Opaque
             char.style.opacity = '1';
-            char.style.color = '#000000'; // Pitch Black
+            char.style.color = 'black';
             char.style.transform = 'translateY(0px)';
             char.style.filter = 'blur(0px)';
           } else {
-            // Inactive: Light Gray and Faded
-            char.style.opacity = '0.2'; // Very faint
-            char.style.color = '#000000'; // Still black base, but transparent
-            char.style.transform = 'translateY(10px)'; // Slight offset
-            char.style.filter = 'blur(4px)'; // Blurry effect for unread text
+            char.style.opacity = '0.2';
+            char.style.color = 'black';
+            char.style.transform = 'translateY(10px)';
+            char.style.filter = 'blur(4px)';
           }
         });
       }
@@ -94,10 +107,9 @@ const Bio = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          // --- CHANGE 1: SOLID WHITE BACKGROUND ---
-          background: '#ffffff',
-          opacity: 0, // Hidden initially
-          transition: 'opacity 0.1s linear',
+          background: '#ffffff', // Solid White
+          // REMOVED: opacity transition
+          willChange: 'transform', // Optimized for sliding
         }}
       >
         <div
@@ -110,7 +122,6 @@ const Bio = () => {
             display: 'flex',
             flexWrap: 'wrap',
             pointerEvents: 'none',
-            // --- CHANGE 2: Ensure text defaults to black ---
             color: 'black',
           }}
         >
@@ -124,7 +135,7 @@ const Bio = () => {
                 opacity: 0.2,
                 transition: 'opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease',
                 marginRight: char === ' ' ? '10px' : '0',
-                display: 'inline-block', // Required for transform to work on spans
+                display: 'inline-block',
                 willChange: 'opacity, transform, filter',
               }}
             >
