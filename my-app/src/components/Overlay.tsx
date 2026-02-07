@@ -20,13 +20,10 @@ const Overlay = () => {
         </h1>
       </section>
 
-      {/* 2. BIO (Page 1-2) */}
-      <section
-        style={{ height: '100vh', background: 'white', padding: '100px', pointerEvents: 'auto' }}
-      >
-        <h2 style={{ fontSize: '3rem', color: '#333' }}>Hello, I'm a Full Stack Dev.</h2>
-        {/* ... content ... */}
-      </section>
+      {/* 2. BIO GAP (Page 1 to 2) - UPDATED */}
+      {/* We removed the HTML text here. This empty space allows 
+          the <Bio /> component to play its animation. */}
+      <section style={{ height: '100vh' }}>{/* INTENTIONALLY EMPTY */}</section>
 
       {/* 3. GHOST GAP FOR PROJECTS (Page 2-5) */}
       {/* 3 pages duration = 300vh height */}

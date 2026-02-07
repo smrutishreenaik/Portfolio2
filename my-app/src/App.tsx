@@ -5,6 +5,7 @@ import Overlay from './components/Overlay';
 import Testimonials from './components/Testimonials';
 import Projects from './components/Projects';
 import ExperienceLadder from './components/ExperienceLadder';
+import Bio from './components/Bio';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Scroll html style={{ width: '100%' }}>
             <Overlay />
           </Scroll>
+
+          <Bio />
 
           <Projects />
 
