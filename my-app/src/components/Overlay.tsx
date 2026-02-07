@@ -34,7 +34,7 @@ const Overlay = () => {
 
       {/* --- NEW BUFFER GAP (Page 5-6) --- */}
       {/* This empty space prevents the overlap! */}
-      <section style={{ height: '100vh' }} />
+      <section style={{ height: '200vh' }} />
 
       {/* 3. Experience Gap (Pages 6-9) */}
       <section style={{ height: '300vh' }} />

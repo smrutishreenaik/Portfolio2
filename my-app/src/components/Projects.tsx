@@ -15,7 +15,7 @@ const Projects = () => {
 
   useFrame(() => {
     // --- SETTINGS ---
-    const totalPages = 12; // Must match App.tsx
+    const totalPages = 18; // Must match App.tsx
     const startPage = 2; // Starts after Intro/Bio
     const pinLength = 3; // Lasts for 3 pages
     // ----------------

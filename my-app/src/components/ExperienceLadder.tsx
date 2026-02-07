@@ -25,7 +25,7 @@ const ExperienceLadder = () => {
   useFrame(() => {
     // --- SETTINGS ---
     const totalPages = 18; // Increased total pages in App.tsx
-    const startPage = 6; // Starts after Projects
+    const startPage = 7; // Starts after Projects
     const duration = 3; // Lasts for 3 pages
     // ----------------
 
