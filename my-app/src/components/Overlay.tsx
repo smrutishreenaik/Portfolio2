@@ -4,21 +4,7 @@ const Overlay = () => {
   return (
     <div style={{ width: '100%', pointerEvents: 'none' }}>
       {/* 1. INTRO (Page 0-1) */}
-      <section
-        style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      >
-        <h1
-          style={{
-            color: 'white',
-            fontSize: '2rem',
-            background: 'rgba(0,0,0,0.7)',
-            padding: '20px',
-            borderRadius: '10px',
-          }}
-        >
-          Scroll to Enter My World
-        </h1>
-      </section>
+      <section style={{ height: '100vh' }} />
 
       {/* 2. BIO GAP (Page 1 to 2) - UPDATED */}
       {/* We removed the HTML text here. This empty space allows 

@@ -6,14 +6,12 @@ import Testimonials from './components/Testimonials';
 import Projects from './components/Projects';
 import ExperienceLadder from './components/ExperienceLadder';
 import Bio from './components/Bio';
+import Intro from './components/Intro';
 
 function App() {
   return (
     <div style={{ height: '100vh', width: '100vw' }}>
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
-
         {/* Increase pages to accommodate the "Stop" duration */}
         <ScrollControls pages={18} damping={0.3}>
           <Experience />
@@ -22,6 +20,8 @@ function App() {
           <Scroll html style={{ width: '100%' }}>
             <Overlay />
           </Scroll>
+
+          <Intro />
 
           <Bio />
 
