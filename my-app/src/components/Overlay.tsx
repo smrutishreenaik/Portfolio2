@@ -29,18 +29,7 @@ const Overlay = () => {
       {/* 4 pages duration = 400vh height */}
       <section style={{ height: '400vh' }} />
 
-      {/* 5. CONTACT (Page 9+) */}
-      <section
-        style={{
-          height: '100vh',
-          background: '#111',
-          color: 'white',
-          padding: '100px',
-          pointerEvents: 'auto',
-        }}
-      >
-        <h2>Let's work together.</h2>
-      </section>
+      <section style={{ height: '100vh' }} />
     </div>
   );
 };

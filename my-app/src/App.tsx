@@ -7,6 +7,7 @@ import Projects from './components/Projects';
 import ExperienceLadder from './components/ExperienceLadder';
 import Bio from './components/Bio';
 import Intro from './components/Intro';
+import Contact from './components/Contact';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <ExperienceLadder />
 
           <Testimonials />
+          <Contact />
         </ScrollControls>
       </Canvas>
     </div>
