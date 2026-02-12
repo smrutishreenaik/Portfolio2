@@ -39,7 +39,7 @@ const ExperienceLadder = () => {
 
   useFrame(() => {
     // --- SETTINGS ---
-    const totalPages = 20;
+    const totalPages = 18;
     const startPage = 7;
     const duration = 3;
     // ----------------

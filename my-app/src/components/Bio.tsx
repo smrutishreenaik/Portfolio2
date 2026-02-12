@@ -19,7 +19,7 @@ const Bio = () => {
 
   useFrame(() => {
     // --- SETTINGS ---
-    const totalPages = 20;
+    const totalPages = 18;
     const startPage = 1;
     const duration = 1;
     // ----------------

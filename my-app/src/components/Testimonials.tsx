@@ -36,7 +36,7 @@ const Testimonials = () => {
     // --- TIMING CONFIGURATION ---
     const totalPages = 18;
     const startPage = 12;
-    const pinLength = 4;
+    const pinLength = 2;
     // ----------------------------
 
     const start = startPage / totalPages;
