@@ -49,62 +49,73 @@ const ExperienceLadder = () => {
     const scrollOffset = scroll.offset;
 
     if (containerRef.current && avatarRef.current) {
-      const safeZone = 6.5 / totalPages;
-      if (scrollOffset < safeZone) {
-        containerRef.current.style.opacity = '0';
-        containerRef.current.style.pointerEvents = 'none';
-      }
-      // 1. VISIBILITY LOGIC
-      else if (scrollOffset < start) {
-        const entranceStart = safeZone;
-        const fade = (scrollOffset - entranceStart) / (start - entranceStart);
-        containerRef.current.style.opacity = `${Math.max(0, fade)}`;
-        containerRef.current.style.pointerEvents = 'none';
+      const entranceStart = (startPage - 1) / totalPages;
+      const exitEnd = (startPage + duration + 1) / totalPages;
+
+      // ==========================================
+      // 1. SLIDING LOGIC (Rise from Bottom)
+      // ==========================================
+
+      if (scrollOffset < start) {
+        // --- ENTRANCE PHASE ---
+        if (scrollOffset < entranceStart) {
+          // Hidden below screen
+          containerRef.current.style.transform = 'translateY(100vh)';
+          containerRef.current.style.pointerEvents = 'none';
+        } else {
+          // Rising Up: 100vh -> 0vh
+          const progress = (scrollOffset - entranceStart) / (start - entranceStart);
+          const yPos = (1 - progress) * 100;
+          containerRef.current.style.transform = `translateY(${yPos}vh)`;
+          containerRef.current.style.pointerEvents = 'none';
+        }
       } else if (scrollOffset > end) {
-        const exitEnd = (startPage + duration + 0.5) / totalPages;
-        const fade = (scrollOffset - end) / (exitEnd - end);
-        containerRef.current.style.opacity = `${1 - fade}`;
-        containerRef.current.style.pointerEvents = 'none';
+        // --- EXIT PHASE ---
+        if (scrollOffset > exitEnd) {
+          // Hidden above screen
+          containerRef.current.style.transform = 'translateY(-100vh)';
+          containerRef.current.style.pointerEvents = 'none';
+        } else {
+          // Rising Out: 0vh -> -100vh
+          const progress = (scrollOffset - end) / (exitEnd - end);
+          const yPos = -progress * 100;
+          containerRef.current.style.transform = `translateY(${yPos}vh)`;
+          containerRef.current.style.pointerEvents = 'none';
+        }
       } else {
-        containerRef.current.style.opacity = '1';
+        // --- ACTIVE PHASE ---
+        containerRef.current.style.transform = 'translateY(0vh)';
         containerRef.current.style.pointerEvents = 'none';
       }
 
-      // 2. ANIMATION LOOP
+      // ==========================================
+      // 2. ROCKET & CARD ANIMATION
+      // ==========================================
       if (scrollOffset >= start && scrollOffset <= end) {
         const progress = (scrollOffset - start) / (end - start);
 
-        // --- ROCKET LOGIC (Moves Bottom to Top) ---
+        // Rocket moves Bottom (90%) to Top (10%)
         const avatarTop = 90 - 80 * progress;
         avatarRef.current.style.top = `${avatarTop}%`;
 
-        // --- CARDS & DETAILS LOGIC ---
         jobs.forEach((job, index) => {
           const card = cardRefs.current[index];
           const detail = detailRefs.current[index];
 
-          // Calculate Timing
           const jobPosition = index / (jobs.length - 1);
           const distance = Math.abs(progress - jobPosition);
-
-          // Visibility Bell Curve (Tightened for distinct phases)
           const visibility = Math.max(0, 1 - distance * 5);
 
-          // Update Ladder Card (Small Popup)
+          // Update Small Card (Right)
           if (card) {
             card.style.opacity = `${visibility}`;
-            // Pop out to the RIGHT (20px)
             card.style.transform = `scale(${0.8 + visibility * 0.2}) translateX(20px)`;
           }
 
-          // Update Details Text (Big Description Card)
+          // Update Big Details Card (Left)
           if (detail) {
             detail.style.opacity = `${visibility}`;
-            // Fade in place (Scale effect only)
             detail.style.transform = `translateY(-50%) scale(${0.95 + visibility * 0.05})`;
-            // Ensure only the active one handles pointer events
-            detail.style.pointerEvents = visibility > 0.5 ? 'none' : 'none';
-            // Add a subtle shadow pop when active
             detail.style.boxShadow = `0 ${20 + visibility * 10}px ${40 + visibility * 10}px -10px rgba(0,0,0,${0.1 + visibility * 0.1})`;
           }
         });
@@ -127,14 +138,23 @@ const ExperienceLadder = () => {
     >
       <div
         ref={containerRef}
-        style={{ width: '100%', height: '100%', position: 'relative', opacity: 0 }}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+
+          // --- CHANGE 1: SOLID WHITE BACKGROUND ---
+          background: '#ffffff',
+
+          willChange: 'transform',
+        }}
       >
-        {/* ================= LEFT SIDE: DETAILS (CENTERED CARD) ================= */}
+        {/* ================= LEFT SIDE: DETAILS ================= */}
         <div
           style={{
             position: 'absolute',
             left: '10%',
-            top: '50%', // CENTERED VERTICALLY
+            top: '50%',
             transform: 'translateY(-50%)',
             width: '50%',
             height: 'auto',
@@ -155,14 +175,13 @@ const ExperienceLadder = () => {
                 transition: 'opacity 0.1s linear, box-shadow 0.1s linear',
                 transform: 'translateY(-50%)',
                 width: '100%',
-
-                // --- CARD STYLING ADDED HERE ---
-                background: 'white',
+                background: 'white', // Cards match background
                 padding: '40px',
+
+                // --- CHANGE 2: DARK TEXT & STYLING ---
+                border: '1px solid #eee', // Subtle border for definition
                 borderRadius: '24px',
-                // Initial soft shadow (animated in useFrame)
-                boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)',
-                // -------------------------------
+                boxShadow: '0 20px 40px -10px rgba(0,0,0,0.05)',
               }}
             >
               <h2 style={{ fontSize: '3rem', margin: '0 0 10px 0', color: '#111' }}>{job.title}</h2>
@@ -176,7 +195,6 @@ const ExperienceLadder = () => {
               >
                 {job.company}
               </h4>
-              {/* Removed the borderLeft from here as it looks cleaner inside the card */}
               <p
                 style={{ fontSize: '1.1rem', lineHeight: '1.6', color: '#333', maxWidth: '600px' }}
               >
@@ -196,6 +214,7 @@ const ExperienceLadder = () => {
             top: '10%',
             bottom: '10%',
             width: '4px',
+            // Made slightly darker so it's visible on white
             background: 'rgba(0,0,0,0.1)',
             borderRadius: '2px',
           }}
@@ -239,16 +258,18 @@ const ExperienceLadder = () => {
                 position: 'absolute',
                 top: `${topPos}%`,
                 left: '80%',
-
-                // POPUP TO THE RIGHT
                 transform: `translate(20px, -50%)`,
                 marginLeft: '40px',
-
                 width: '180px',
                 padding: '15px',
                 background: 'white',
                 borderRadius: '12px',
-                boxShadow: '0 10px 30px -10px rgba(0,0,0,0.3)',
+
+                // Dark text for small cards too
+                color: '#111',
+                border: '1px solid #f0f0f0',
+                boxShadow: '0 10px 30px -10px rgba(0,0,0,0.1)',
+
                 opacity: 0,
                 transition: 'transform 0.1s linear',
                 textAlign: 'left',
