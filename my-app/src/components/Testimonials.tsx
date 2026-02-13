@@ -45,7 +45,7 @@ const Testimonials = () => {
     if (containerRef.current) {
       const scrollOffset = scroll.offset;
 
-      // 1. CONTAINER VISIBILITY LOGIC
+      // 1. CONTAINER VISIBILITY LOGIC (Fades in from Page 11 to 12)
       if (scrollOffset < start) {
         const entranceStart = (startPage - 1) / totalPages;
         const progress = (scrollOffset - entranceStart) / (start - entranceStart);
@@ -67,17 +67,29 @@ const Testimonials = () => {
       const card = cardRefs.current[index];
       if (!card) return;
 
-      const relativeStart = startPage + index * (pinLength / testimonials.length);
+      // --- FIX 1: START EARLIER ---
+      // We subtract 0.5 so the cards start rising at Page 11.5 (while title is fading in)
+      // By Page 12 (Title fully visible), the first card is already visible and moving up.
+      const adjustedStart = startPage - 0.5;
+
+      const relativeStart = adjustedStart + index * (pinLength / testimonials.length);
       const cardStart = relativeStart / totalPages;
       const cardDuration = pinLength / testimonials.length / totalPages;
 
       const range = scroll.range(cardStart, cardDuration);
+
+      // Stack cards slightly with an offset
       const gap = 4;
       const offset = index * gap;
 
-      const translateY = (1 - range) * 100 + offset;
+      // --- FIX 2: REDUCE TRAVEL DISTANCE ---
+      // Changed from 100 (bottom of screen) to 60.
+      // The cards now have less distance to travel, making them appear "sooner".
+      const translateY = (1 - range) * 60 + offset;
 
       card.style.transform = `translateY(${translateY}vh)`;
+
+      // Fade in the card as it rises
       card.style.opacity = `${range}`;
     });
   });
@@ -85,12 +97,9 @@ const Testimonials = () => {
   return (
     <Html
       portal={{ current: document.body }}
-      // 1. REMOVE 'fullscreen' (It seems to be failing you)
-      // 2. Add 'calculatePosition' to force it to lock to center
       calculatePosition={() => [0, 0]}
       style={{
         pointerEvents: 'none',
-        // 3. FORCE the wrapper to be top-left of the screen
         position: 'fixed',
         top: 0,
         left: 0,
@@ -102,11 +111,9 @@ const Testimonials = () => {
         ref={containerRef}
         style={{
           position: 'absolute',
-          top: '50%', // Move to vertical middle
-          left: '50%', // Move to horizontal middle
-          // 4. CRITICAL: Pull it back by half its width/height to center it
+          top: '50%',
+          left: '50%',
           transform: 'translate(-50%, -50%)',
-
           width: '100vw',
           height: '100vh',
           display: 'flex',
@@ -115,27 +122,29 @@ const Testimonials = () => {
           zIndex: 100,
         }}
       >
-        {/* ... (Rest of your content remains the same) ... */}
-
         <h2
-          style={{ position: 'absolute', top: '10%', color: 'white', fontSize: '3rem', zIndex: 0 }}
+          style={{
+            position: 'absolute',
+            top: '15%', // Moved down slightly so it's closer to where cards appear
+            color: 'white',
+            fontSize: '3rem',
+            zIndex: 0,
+          }}
         >
           What People Say
         </h2>
 
         {testimonials.map((t, index) => (
-          /* ... existing card code ... */
           <div
             key={t.id}
             ref={(el) => {
               cardRefs.current[index] = el;
             }}
             style={{
-              // ... keep your existing card styles ...
               position: 'absolute',
               width: '80vw',
               maxWidth: '600px',
-              height: '350px',
+              height: '300px', // Slightly reduced height to fit better
               backgroundColor: t.color,
               borderRadius: '24px',
               padding: '40px',
@@ -144,12 +153,11 @@ const Testimonials = () => {
               flexDirection: 'column',
               justifyContent: 'center',
               zIndex: index + 1,
-              transform: 'translateY(100vh)', // This will be overwritten by JS, which is fine
+              transform: 'translateY(60vh)', // Matches the JS start pos
               opacity: 0,
               willChange: 'transform, opacity',
             }}
           >
-            {/* ... content ... */}
             <p
               style={{ fontSize: '1.5rem', fontWeight: '500', marginBottom: '20px', color: '#333' }}
             >
