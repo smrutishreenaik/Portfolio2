@@ -34,7 +34,7 @@ const Testimonials = () => {
 
   useFrame(() => {
     // --- TIMING CONFIGURATION ---
-    const totalPages = 18;
+    const totalPages = 16;
     const startPage = 12;
     const pinLength = 2;
     // ----------------------------

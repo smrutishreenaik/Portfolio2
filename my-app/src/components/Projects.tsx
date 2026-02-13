@@ -30,7 +30,7 @@ const Projects = () => {
   const caseTitleRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useFrame(() => {
-    const totalPages = 18;
+    const totalPages = 16;
     const startPage = 3;
     const pinLength = 3;
 

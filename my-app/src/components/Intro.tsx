@@ -10,7 +10,7 @@ const Intro = () => {
 
   useFrame(() => {
     // --- SETTINGS ---
-    const totalPages = 18;
+    const totalPages = 16;
     const end = 1 / totalPages;
 
     if (containerRef.current && boxRef.current && arrowRef.current) {

@@ -15,7 +15,7 @@ const Contact = () => {
 
   useFrame(() => {
     // --- SETTINGS ---
-    const totalPages = 18;
+    const totalPages = 16;
     const startPage = 15;
     const duration = 1;
     // ----------------
