@@ -1,0 +1,151 @@
+// src/components/ExperienceLadder.module.scss
+
+$text-dark: #111;
+$text-medium: #555;
+$text-light: #666;
+$primary-color: #3b82f6;
+$bg-white: #ffffff;
+$border-light: #eee;
+
+.htmlWrapper {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: $bg-white;
+  will-change: transform;
+}
+
+// --- LEFT SIDE: BIG DETAILS CARD ---
+.detailsWrapper {
+  position: absolute;
+  left: 10%;
+  top: 50%;
+  width: 50%;
+  height: auto;
+  pointer-events: none;
+
+  // Grid trick to stack all cards on top of each other
+  display: grid;
+  place-items: center start;
+
+  // NOTE: We do NOT use transform: translateY(-50%) here because
+  // the children (cards) handle their own centering transform in JS.
+}
+
+.detailCard {
+  grid-area: 1 / 1; // Forces all cards into the same cell
+  width: 100%;
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid $border-light;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+
+  // Initial state (overridden by JS)
+  opacity: 0;
+  transform: translateY(-50%);
+
+  transition:
+    opacity 0.1s linear,
+    box-shadow 0.1s linear;
+  will-change: transform, opacity;
+
+  h2 {
+    font-size: 3rem;
+    margin: 0 0 10px 0;
+    color: $text-dark;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    margin: 0 0 20px 0;
+    color: $text-medium;
+    font-weight: 400;
+  }
+
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+    max-width: 600px;
+  }
+}
+
+// --- RIGHT SIDE: LADDER & ROCKET ---
+.ladderLine {
+  position: absolute;
+  left: 80%;
+  top: 10%;
+  bottom: 10%;
+  width: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.rocket {
+  position: absolute;
+  left: 80%;
+
+  // DEFAULT STATE: HIDDEN
+  opacity: 0;
+  transform: scale(0); // Shrink it too for a pop-in effect
+
+  width: 60px;
+  height: 60px;
+  background: $primary-color;
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+
+  // Add transition for smooth appearance
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.popupCard {
+  position: absolute;
+  left: 80%;
+  // Top is handled by JS
+
+  width: 180px;
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+
+  margin-left: 40px; // Push away from ladder
+  text-align: left;
+  pointer-events: none;
+
+  // Initial State
+  opacity: 0;
+  // NOTE: The vertical centering transform (-50%) must be kept in JS logic
+  transform: translate(20px, -50%);
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: $text-dark;
+  }
+
+  div {
+    font-size: 0.8rem;
+    color: $text-light;
+  }
+}

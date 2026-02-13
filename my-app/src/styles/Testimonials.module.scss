@@ -1,0 +1,87 @@
+// src/components/Testimonials.module.scss
+
+$text-dark: #111;
+$text-medium: #333;
+$text-light: #555;
+$title-color: white;
+
+.htmlWrapper {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+
+  // Opacity is handled in JS
+}
+
+.title {
+  position: absolute;
+  top: 15%;
+  color: $title-color;
+  font-size: 3rem;
+  z-index: 0;
+  margin: 0;
+}
+
+// --- TESTIMONIAL CARD ---
+.card {
+  position: absolute;
+  width: 80vw;
+  max-width: 600px;
+  height: 300px;
+
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  will-change: transform, opacity;
+
+  // Dynamic props handled in JS:
+  // - background-color
+  // - z-index
+  // - transform
+  // - opacity
+}
+
+.quote {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: $text-medium;
+  margin-top: 0;
+}
+
+.authorBlock {
+  margin-top: auto;
+}
+
+.authorName {
+  color: $text-dark;
+  display: block;
+  font-weight: bold;
+}
+
+.authorRole {
+  font-size: 0.9rem;
+  color: $text-light;
+}

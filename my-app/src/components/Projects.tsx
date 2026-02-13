@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useScroll, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
+import styles from '../styles/Projects.module.scss'; // <--- Import Styles
 
 const rawProjects = [
   { title: 'E-Com Core', desc: '.NET Microservices', color: '#fca5a5' },
@@ -72,9 +73,9 @@ const Projects = () => {
         const progress = (scrollOffset - start) / (end - start);
         const safeProgress = Math.max(0, Math.min(1, progress));
 
-        // --- A. TEXT REVEAL LOGIC (REVERSED) ---
+        // --- A. TEXT REVEAL LOGIC ---
 
-        // 1. CASE STUDIES (Now appears FIRST: 0.0 to 0.25)
+        // 1. CASE STUDIES (0.0 to 0.25)
         const caseRevealProgress = Math.min(1, safeProgress / 0.25);
         const caseCharsToShow = Math.floor(caseTitle.length * caseRevealProgress);
 
@@ -85,7 +86,7 @@ const Projects = () => {
           }
         });
 
-        // 2. PROJECTS (Now appears SECOND: 0.25 to 0.50)
+        // 2. PROJECTS (0.25 to 0.50)
         const projRevealProgress = Math.min(1, Math.max(0, (safeProgress - 0.25) / 0.25));
         const projCharsToShow = Math.floor(projectTitle.length * projRevealProgress);
 
@@ -112,59 +113,19 @@ const Projects = () => {
     <Html
       portal={{ current: document.body }}
       calculatePosition={() => [0, 0]}
-      style={{
-        pointerEvents: 'none',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
-      }}
+      className={styles.htmlWrapper}
     >
-      <div
-        ref={containerRef}
-        style={{
-          width: '100%',
-          height: '100%',
-          position: 'relative',
-          opacity: 0,
-        }}
-      >
+      <div ref={containerRef} className={styles.container}>
         {/* ================= PROJECT TITLE (CENTERED) ================= */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '2%',
-            left: 0,
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            zIndex: 10,
-            pointerEvents: 'none',
-          }}
-        >
-          <h1
-            style={{
-              fontSize: '3rem',
-              margin: 0,
-              color: '#ffffff',
-              textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-              display: 'flex',
-            }}
-          >
+        <div className={`${styles.titleWrapper} ${styles.top}`}>
+          <h1 className={styles.mainTitle}>
             {projectTitle.split('').map((char, i) => (
               <span
                 key={i}
                 ref={(el) => {
                   projTitleRefs.current[i] = el;
                 }}
-                style={{
-                  opacity: 0,
-                  transform: 'translateY(15px)',
-                  transition: 'opacity 0.1s, transform 0.1s',
-                  marginRight: char === ' ' ? '10px' : '0',
-                }}
+                className={`${styles.char} ${char === ' ' ? styles.space : ''}`}
               >
                 {char}
               </span>
@@ -173,105 +134,31 @@ const Projects = () => {
         </div>
 
         {/* ================= TOP STRIP (PROJECTS) ================= */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '8%',
-            left: 0,
-            width: '100%',
-            height: '40%',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <div
-            ref={topStripRef}
-            style={{
-              display: 'flex',
-              width: 'max-content',
-              willChange: 'transform',
-              padding: '20px 0',
-            }}
-          >
+        <div className={`${styles.stripContainer} ${styles.top}`}>
+          <div ref={topStripRef} className={styles.strip}>
             {projects.map((p, i) => (
               <div
                 key={i}
-                style={{
-                  width: '20vw',
-                  marginRight: '5vw',
-                  height: '30vh',
-                  background: p.color,
-                  borderRadius: '24px',
-                  boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
-                  padding: '25px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  pointerEvents: 'none',
-                  boxSizing: 'border-box',
-                  transform: 'translateZ(0)',
-                }}
+                className={`${styles.card} ${styles.projectCard}`}
+                style={{ background: p.color }} // Dynamic Color
               >
-                <h3
-                  style={{
-                    fontSize: '1.8rem',
-                    margin: '0 0 10px 0',
-                    color: '#111',
-                    textAlign: 'center',
-                  }}
-                >
-                  {p.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: '1rem',
-                    color: '#333',
-                    textAlign: 'center',
-                    lineHeight: '1.4',
-                  }}
-                >
-                  {p.desc}
-                </p>
+                <h3 className={styles.cardTitle}>{p.title}</h3>
+                <p className={styles.cardDesc}>{p.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* ================= CASE STUDIES TITLE (CENTERED) ================= */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '52%',
-            left: 0,
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            zIndex: 10,
-            pointerEvents: 'none',
-          }}
-        >
-          <h1
-            style={{
-              fontSize: '3rem',
-              margin: 0,
-              color: '#ffffff',
-              textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-              display: 'flex',
-            }}
-          >
+        <div className={`${styles.titleWrapper} ${styles.bottom}`}>
+          <h1 className={styles.mainTitle}>
             {caseTitle.split('').map((char, i) => (
               <span
                 key={i}
                 ref={(el) => {
                   caseTitleRefs.current[i] = el;
                 }}
-                style={{
-                  opacity: 0,
-                  transform: 'translateY(15px)',
-                  transition: 'opacity 0.1s, transform 0.1s',
-                  marginRight: char === ' ' ? '10px' : '0',
-                }}
+                className={`${styles.char} ${char === ' ' ? styles.space : ''}`}
               >
                 {char}
               </span>
@@ -280,67 +167,16 @@ const Projects = () => {
         </div>
 
         {/* ================= BOTTOM STRIP (CASE STUDIES) ================= */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '58%',
-            left: 0,
-            width: '100%',
-            height: '40%',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <div
-            ref={bottomStripRef}
-            style={{
-              display: 'flex',
-              width: 'max-content',
-              willChange: 'transform',
-              padding: '20px 0',
-            }}
-          >
+        <div className={`${styles.stripContainer} ${styles.bottom}`}>
+          <div ref={bottomStripRef} className={styles.strip}>
             {caseStudies.map((c, i) => (
               <div
                 key={i}
-                style={{
-                  width: '20vw',
-                  marginRight: '5vw',
-                  height: '30vh',
-                  background: 'white',
-                  border: `3px solid ${c.color}`,
-                  borderRadius: '24px',
-                  boxShadow: '0 15px 35px rgba(0,0,0,0.15)',
-                  padding: '25px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  pointerEvents: 'none',
-                  boxSizing: 'border-box',
-                  transform: 'translateZ(0)',
-                }}
+                className={`${styles.card} ${styles.caseStudyCard}`}
+                style={{ border: `3px solid ${c.color}` }} // Dynamic Border Color
               >
-                <h3
-                  style={{
-                    fontSize: '1.8rem',
-                    margin: '0 0 10px 0',
-                    color: '#111',
-                    textAlign: 'center',
-                  }}
-                >
-                  {c.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: '1rem',
-                    color: '#666',
-                    textAlign: 'center',
-                    lineHeight: '1.4',
-                  }}
-                >
-                  {c.desc}
-                </p>
+                <h3 className={styles.cardTitle}>{c.title}</h3>
+                <p className={styles.cardDesc}>{c.desc}</p>
               </div>
             ))}
           </div>

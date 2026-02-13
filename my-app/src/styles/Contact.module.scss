@@ -1,0 +1,147 @@
+// src/components/Contact.module.scss
+
+$text-light: #fff;
+$text-dim: #aaa;
+$bg-glass: rgba(17, 17, 17, 0.95);
+$input-bg: rgba(0, 0, 0, 0.3);
+$border-light: rgba(255, 255, 255, 0.8);
+$border-dim: rgba(255, 255, 255, 0.1);
+$border-input: #444;
+
+.htmlWrapper {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; // Allows clicks to pass through the wrapper
+}
+
+// --- THE MAIN CARD ---
+.card {
+  width: 90vw;
+  max-width: 1000px;
+  height: 80vh;
+  max-height: 600px;
+
+  border: 1px solid $border-light;
+  border-radius: 24px;
+  background-color: $bg-glass;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  overflow: hidden;
+  will-change: transform;
+  opacity: 1; // Start visible
+  pointer-events: auto; // Enable typing/clicking
+}
+
+// --- LEFT SIDE: TEXT ---
+.textSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border-right: 1px solid $border-dim;
+
+  h1 {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    max-width: 350px;
+    display: flex;
+    flex-wrap: wrap;
+    color: $text-light;
+  }
+}
+
+.char {
+  display: inline-block;
+  transition:
+    opacity 0.1s,
+    transform 0.1s;
+
+  &.space {
+    margin-right: 10px;
+  }
+}
+
+// --- RIGHT SIDE: FORM ---
+.formSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.form {
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.fieldWrapper {
+  opacity: 0;
+  transform: translateX(50px);
+  // Transition handled via JS or applied here if needed
+}
+
+// --- INPUTS & LABELS ---
+.label {
+  display: block;
+  margin-bottom: 5px;
+  color: $text-dim;
+  font-size: 0.9rem;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid $border-input;
+  background: $input-bg;
+  color: $text-light;
+  outline: none;
+}
+
+.textarea {
+  resize: none;
+}
+
+.button {
+  width: 100%;
+  padding: 15px;
+  border-radius: 8px;
+  border: none;
+  background: white;
+  color: black;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}

@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useScroll, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
+import styles from '../styles/Testimonials.module.scss'; // <--- Import Styles
 
 const testimonials = [
   {
@@ -24,7 +25,13 @@ const testimonials = [
     text: 'Incredible attention to detail in the frontend.',
     color: '#dcfce7',
   },
-  { id: 4, name: 'Emily Davis', role: 'CTO', text: 'A true full-stack talent.', color: '#fce7f3' },
+  {
+    id: 4,
+    name: 'Emily Davis',
+    role: 'CTO',
+    text: 'A true full-stack talent.',
+    color: '#fce7f3',
+  },
 ];
 
 const Testimonials = () => {
@@ -45,7 +52,7 @@ const Testimonials = () => {
     if (containerRef.current) {
       const scrollOffset = scroll.offset;
 
-      // 1. CONTAINER VISIBILITY LOGIC (Fades in from Page 11 to 12)
+      // 1. CONTAINER VISIBILITY LOGIC
       if (scrollOffset < start) {
         const entranceStart = (startPage - 1) / totalPages;
         const progress = (scrollOffset - entranceStart) / (start - entranceStart);
@@ -67,29 +74,19 @@ const Testimonials = () => {
       const card = cardRefs.current[index];
       if (!card) return;
 
-      // --- FIX 1: START EARLIER ---
-      // We subtract 0.5 so the cards start rising at Page 11.5 (while title is fading in)
-      // By Page 12 (Title fully visible), the first card is already visible and moving up.
       const adjustedStart = startPage - 0.5;
-
       const relativeStart = adjustedStart + index * (pinLength / testimonials.length);
       const cardStart = relativeStart / totalPages;
       const cardDuration = pinLength / testimonials.length / totalPages;
 
       const range = scroll.range(cardStart, cardDuration);
 
-      // Stack cards slightly with an offset
       const gap = 4;
       const offset = index * gap;
 
-      // --- FIX 2: REDUCE TRAVEL DISTANCE ---
-      // Changed from 100 (bottom of screen) to 60.
-      // The cards now have less distance to travel, making them appear "sooner".
       const translateY = (1 - range) * 60 + offset;
 
       card.style.transform = `translateY(${translateY}vh)`;
-
-      // Fade in the card as it rises
       card.style.opacity = `${range}`;
     });
   });
@@ -98,41 +95,10 @@ const Testimonials = () => {
     <Html
       portal={{ current: document.body }}
       calculatePosition={() => [0, 0]}
-      style={{
-        pointerEvents: 'none',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-      }}
+      className={styles.htmlWrapper}
     >
-      <div
-        ref={containerRef}
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 100,
-        }}
-      >
-        <h2
-          style={{
-            position: 'absolute',
-            top: '15%', // Moved down slightly so it's closer to where cards appear
-            color: 'white',
-            fontSize: '3rem',
-            zIndex: 0,
-          }}
-        >
-          What People Say
-        </h2>
+      <div ref={containerRef} className={styles.container}>
+        <h2 className={styles.title}>What People Say</h2>
 
         {testimonials.map((t, index) => (
           <div
@@ -140,32 +106,21 @@ const Testimonials = () => {
             ref={(el) => {
               cardRefs.current[index] = el;
             }}
+            className={styles.card}
             style={{
-              position: 'absolute',
-              width: '80vw',
-              maxWidth: '600px',
-              height: '300px', // Slightly reduced height to fit better
               backgroundColor: t.color,
-              borderRadius: '24px',
-              padding: '40px',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
               zIndex: index + 1,
-              transform: 'translateY(60vh)', // Matches the JS start pos
+              // Initial state for transform/opacity is handled by useFrame immediately,
+              // but we can set defaults here to prevent flash
+              transform: 'translateY(60vh)',
               opacity: 0,
-              willChange: 'transform, opacity',
             }}
           >
-            <p
-              style={{ fontSize: '1.5rem', fontWeight: '500', marginBottom: '20px', color: '#333' }}
-            >
-              "{t.text}"
-            </p>
-            <div style={{ marginTop: 'auto' }}>
-              <strong style={{ color: '#111', display: 'block' }}>{t.name}</strong>
-              <span style={{ fontSize: '0.9rem', color: '#555' }}>{t.role}</span>
+            <p className={styles.quote}>"{t.text}"</p>
+
+            <div className={styles.authorBlock}>
+              <strong className={styles.authorName}>{t.name}</strong>
+              <span className={styles.authorRole}>{t.role}</span>
             </div>
           </div>
         ))}
