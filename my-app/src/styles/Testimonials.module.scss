@@ -1,7 +1,9 @@
-$text-dark: #111;
-$text-medium: #333;
-$text-light: #555;
-$title-color: white;
+// src/components/Testimonials.module.scss
+
+$text-light: #ffffff;
+$text-sub: #aaaaaa;
+$card-bg: rgba(10, 10, 10, 0.85); // Deep black with slight transparency
+$border-color: rgba(255, 255, 255, 0.3); // Crisp white border
 
 .htmlWrapper {
   pointer-events: none;
@@ -29,59 +31,133 @@ $title-color: white;
 .title {
   position: absolute;
   top: 15%;
-  color: $title-color;
+  color: $text-light;
   font-size: 3rem;
   z-index: 0;
   margin: 0;
 }
 
-// --- TESTIMONIAL CARD ---
+// --- NEW SLEEK TESTIMONIAL CARD ---
 .card {
   position: absolute;
-
-  /* Strict centering anchor points */
   top: 50%;
   left: 50%;
 
-  /* Size */
-  width: 90vw;
-  max-width: 1400px;
-  height: 65vh;
+  width: 80vw;
+  max-width: 1000px; // Capped slightly so lines of text don't get too long to read
+  height: 70vh;
+  max-height: 500px;
 
+  /* The New Black & White Aesthetic */
+  background: $card-bg;
+  backdrop-filter: blur(10px);
+  border: 1px solid $border-color;
   border-radius: 24px;
-  padding: 40px 60px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  padding: 50px 60px;
 
-  /* Flexbox layout to center content */
+  /* Subtle glow/shadow for depth */
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.8),
+    inset 0 0 20px rgba(255, 255, 255, 0.03);
+
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  justify-content: space-between;
+  text-align: left; // Left-aligned looks more premium for long quotes
 
   will-change: transform, opacity;
+
+  /* CRITICAL: Re-enable pointer events so the LinkedIn button is clickable */
+  pointer-events: auto;
+}
+
+/* Decorative huge quote mark */
+.quoteMark {
+  font-family: serif;
+  font-size: 6rem;
+  color: rgba(255, 255, 255, 0.08);
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .quote {
-  font-size: 2rem;
-  font-weight: 500;
-  margin-bottom: 20px;
-  color: $text-medium;
-  margin-top: 0;
-  max-width: 900px;
+  font-size: 2.2rem;
+  font-weight: 300;
+  line-height: 1.4;
+  color: $text-light;
+  margin: auto 0;
+  z-index: 1; // Sit above the quote mark
 }
 
-.authorBlock {
-  margin-top: auto;
+// --- BOTTOM SECTION: AUTHOR & LINK ---
+.authorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.authorInfo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profilePic {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid $text-light;
+}
+
+.authorText {
+  display: flex;
+  flex-direction: column;
 }
 
 .authorName {
-  color: $text-dark;
-  display: block;
-  font-weight: bold;
+  color: $text-light;
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 .authorRole {
-  font-size: 0.9rem;
+  font-size: 1rem;
+  color: $text-sub;
+  margin-top: 4px;
+}
+
+// --- LINKEDIN BUTTON ---
+.linkedinBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  background: transparent;
   color: $text-light;
+  border: 1px solid $text-light;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  svg {
+    fill: currentColor;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    background: $text-light;
+    color: #000000;
+    transform: translateY(-2px);
+  }
 }
