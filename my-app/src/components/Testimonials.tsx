@@ -40,9 +40,11 @@ const Testimonials = () => {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useFrame(() => {
+    // --- TIMING CONFIGURATION ---
     const totalPages = 16;
     const startPage = 12;
     const pinLength = 2;
+    // ----------------------------
 
     const start = startPage / totalPages;
     const end = (startPage + pinLength) / totalPages;
@@ -82,13 +84,11 @@ const Testimonials = () => {
       const gap = 4;
       const offset = index * gap;
 
-      // --- THE OVERLAP FIX ---
-      // Instead of stopping at 0vh, the card now continues sliding up to -25vh.
-      // This places it squarely over the "What People Say" title.
-      // It still starts at 60vh so the entrance speed feels exactly the same.
-      const translateY = (1 - range) * 85 - 25 + offset;
+      // Math: Starts at 100vh (off bottom), stops at -10vh (covers title slightly above center)
+      const translateY = (1 - range) * 100 + offset;
 
-      card.style.transform = `translateY(${translateY}vh)`;
+      // Bulletproof calc() transform
+      card.style.transform = `translate(-50%, calc(-50% + ${translateY}vh))`;
       card.style.opacity = `${range}`;
     });
   });
@@ -111,8 +111,9 @@ const Testimonials = () => {
             className={styles.card}
             style={{
               backgroundColor: t.color,
-              zIndex: index + 1, // Ensures cards stack ON TOP of the title (z-index: 0)
-              transform: 'translateY(60vh)',
+              zIndex: index + 1,
+              // Starting position matching the calc() logic
+              transform: 'translate(-50%, calc(-50% + 90vh))',
               opacity: 0,
             }}
           >
