@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useScroll, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import styles from '../styles/Testimonials.module.scss'; // <--- Import Styles
+import styles from '../styles/Testimonials.module.scss';
 
 const testimonials = [
   {
@@ -40,11 +40,9 @@ const Testimonials = () => {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useFrame(() => {
-    // --- TIMING CONFIGURATION ---
     const totalPages = 16;
     const startPage = 12;
     const pinLength = 2;
-    // ----------------------------
 
     const start = startPage / totalPages;
     const end = (startPage + pinLength) / totalPages;
@@ -84,7 +82,11 @@ const Testimonials = () => {
       const gap = 4;
       const offset = index * gap;
 
-      const translateY = (1 - range) * 60 + offset;
+      // --- THE OVERLAP FIX ---
+      // Instead of stopping at 0vh, the card now continues sliding up to -25vh.
+      // This places it squarely over the "What People Say" title.
+      // It still starts at 60vh so the entrance speed feels exactly the same.
+      const translateY = (1 - range) * 85 - 25 + offset;
 
       card.style.transform = `translateY(${translateY}vh)`;
       card.style.opacity = `${range}`;
@@ -109,9 +111,7 @@ const Testimonials = () => {
             className={styles.card}
             style={{
               backgroundColor: t.color,
-              zIndex: index + 1,
-              // Initial state for transform/opacity is handled by useFrame immediately,
-              // but we can set defaults here to prevent flash
+              zIndex: index + 1, // Ensures cards stack ON TOP of the title (z-index: 0)
               transform: 'translateY(60vh)',
               opacity: 0,
             }}
