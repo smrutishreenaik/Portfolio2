@@ -42,25 +42,24 @@ $title-color: white;
 // --- TESTIMONIAL CARD ---
 .card {
   position: absolute;
-  width: 80vw;
-  max-width: 600px;
+
+  /* --- THE WIDER CARD FIX --- */
+  width: 80vw; /* Takes up 80% of the viewport width */
+  max-width: 1200px; /* Increased from 600px so it actually stretches out on desktop */
+
   height: 300px;
 
   border-radius: 24px;
-  padding: 40px;
+  padding: 40px 60px; /* Slightly increased horizontal padding for a wider card */
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center; /* Optional: Centers the text horizontally inside the wide card */
+  text-align: center; /* Optional: Centers the text alignment */
 
   will-change: transform, opacity;
-
-  // Dynamic props handled in JS:
-  // - background-color
-  // - z-index
-  // - transform
-  // - opacity
 }
 
 .quote {
