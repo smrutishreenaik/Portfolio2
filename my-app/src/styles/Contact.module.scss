@@ -1,12 +1,10 @@
 // src/components/Contact.module.scss
 
-$text-light: #fff;
-$text-dim: #aaa;
-$bg-glass: rgba(17, 17, 17, 0.95);
-$input-bg: rgba(0, 0, 0, 0.3);
-$border-light: rgba(255, 255, 255, 0.8);
-$border-dim: rgba(255, 255, 255, 0.1);
-$border-input: #444;
+$text-dark: #000000;
+$text-dim: #555555;
+$bg-white: #ffffff;
+$input-bg: #f9f9f9;
+$border-input: #cccccc;
 
 .htmlWrapper {
   pointer-events: none;
@@ -23,27 +21,27 @@ $border-input: #444;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none; // Allows clicks to pass through the wrapper
+  pointer-events: none;
 }
 
-// --- THE MAIN CARD ---
+// --- FULL SCREEN WHITE SECTION (No longer a "card") ---
 .card {
-  width: 90vw;
-  max-width: 1000px;
-  height: 80vh;
-  max-height: 600px;
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
 
-  border: 1px solid $border-light;
-  border-radius: 24px;
-  background-color: $bg-glass;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 0;
+  background-color: $bg-white;
+  box-shadow: none;
+  backdrop-filter: none;
 
   display: flex;
   overflow: hidden;
   will-change: transform;
-  opacity: 1; // Start visible
-  pointer-events: auto; // Enable typing/clicking
+  opacity: 1;
+  pointer-events: none;
 }
 
 // --- LEFT SIDE: TEXT ---
@@ -53,7 +51,7 @@ $border-input: #444;
   align-items: center;
   justify-content: center;
   padding: 40px;
-  border-right: 1px solid $border-dim;
+  // Removed the border-right for a cleaner, open look
 
   h1 {
     font-size: 3.5rem;
@@ -61,7 +59,7 @@ $border-input: #444;
     max-width: 350px;
     display: flex;
     flex-wrap: wrap;
-    color: $text-light;
+    color: $text-dark; // Black text
   }
 }
 
@@ -84,7 +82,7 @@ $border-input: #444;
   align-items: center;
   justify-content: center;
   padding: 40px;
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent; // Removed the dark tint
 }
 
 .form {
@@ -98,14 +96,13 @@ $border-input: #444;
 .fieldWrapper {
   opacity: 0;
   transform: translateX(50px);
-  // Transition handled via JS or applied here if needed
 }
 
 // --- INPUTS & LABELS ---
 .label {
   display: block;
   margin-bottom: 5px;
-  color: $text-dim;
+  color: $text-dim; // Dark grey
   font-size: 0.9rem;
 }
 
@@ -116,8 +113,13 @@ $border-input: #444;
   border-radius: 6px;
   border: 1px solid $border-input;
   background: $input-bg;
-  color: $text-light;
+  color: $text-dark; // Black typing text
   outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: #000000;
+  }
 }
 
 .textarea {
@@ -129,8 +131,11 @@ $border-input: #444;
   padding: 15px;
   border-radius: 8px;
   border: none;
-  background: white;
-  color: black;
+
+  /* Inverted button for light mode */
+  background: #000000;
+  color: #ffffff;
+
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;

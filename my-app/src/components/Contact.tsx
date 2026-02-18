@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useScroll, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import styles from '../styles/Contact.module.scss'; // <--- Import Styles
+import styles from '../styles/Contact.module.scss';
 
 const Contact = () => {
   const scroll = useScroll();
@@ -55,11 +55,13 @@ const Contact = () => {
           if (index < charsToShow) {
             char.style.opacity = '1';
             char.style.transform = 'translateY(0px)';
-            char.style.color = '#fff';
+            // --- UPDATED JAVASCRIPT COLORS TO BLACK ---
+            char.style.color = '#000000';
           } else {
             char.style.opacity = '0.1';
             char.style.transform = 'translateY(10px)';
-            char.style.color = '#555';
+            // --- UPDATED INACTIVE COLOR TO GREY ---
+            char.style.color = '#aaaaaa';
           }
         });
 
@@ -86,13 +88,9 @@ const Contact = () => {
       portal={{ current: document.body }}
       calculatePosition={() => [0, 0]}
       className={styles.htmlWrapper}
-      style={{
-        width: '100vw',
-        height: '100vh',
-      }}
     >
       <div ref={containerRef} className={styles.container}>
-        {/* ================= THE CARD ================= */}
+        {/* ================= THE WHITE SECTION ================= */}
         <div ref={cardRef} className={styles.card}>
           {/* LEFT SIDE (TEXT) */}
           <div className={styles.textSection}>
