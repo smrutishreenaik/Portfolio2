@@ -30,11 +30,10 @@ $border-input: #cccccc;
   height: 100vh;
   background-color: $bg-white;
 
-  /* --- LAYOUT FIX: Bring them closer --- */
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8vw; /* This controls the exact distance between Text and Form */
+  gap: 8vw;
   padding: 0 5vw;
 
   overflow: hidden;
@@ -43,18 +42,17 @@ $border-input: #cccccc;
   pointer-events: none;
 }
 
-// --- LEFT SIDE: TEXT ---
+// --- LEFT SIDE: TEXT & IMAGE ---
 .textSection {
   display: flex;
-  align-items: center;
+  flex-direction: column; /* Stacks the text and image vertically */
+  align-items: flex-start; /* Aligns them to the left */
   justify-content: center;
 
   h1 {
-    /* --- SIZE FIX: Bigger Text --- */
     font-size: 5rem;
     line-height: 1.1;
-    max-width: 500px; /* Widened so the bigger text wraps nicely */
-
+    max-width: 500px;
     display: flex;
     flex-wrap: wrap;
     color: $text-dark;
@@ -69,7 +67,35 @@ $border-input: #cccccc;
     transform 0.1s;
 
   &.space {
-    margin-right: 12px; /* Slightly wider space for the bigger font */
+    margin-right: 12px;
+  }
+}
+
+.contactImage {
+  margin-top: 40px;
+  width: 100%;
+  max-width: 400px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+
+  /* Initial hidden state */
+  opacity: 0;
+  transform: scale(0.5) translateY(50px);
+  will-change: transform, opacity;
+
+  /* The magic sauce: CSS handles the animation duration and bounce, 
+    independent of how slow the user scrolls!
+  */
+  transition:
+    opacity 0.3s ease-out,
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* The class we will add via JavaScript to trigger the pop */
+  &.popped {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
@@ -82,11 +108,10 @@ $border-input: #cccccc;
 }
 
 .form {
-  /* --- SIZE FIX: Bigger Form --- */
   width: 450px;
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Increased gap between form fields */
+  gap: 20px;
 }
 
 .fieldWrapper {
@@ -99,18 +124,15 @@ $border-input: #cccccc;
   display: block;
   margin-bottom: 8px;
   color: $text-dim;
-  font-size: 1.1rem; /* Bigger Label */
+  font-size: 1.1rem;
   font-weight: 500;
 }
 
 .input,
 .textarea {
   width: 100%;
-
-  /* --- SIZE FIX: Taller inputs with bigger text --- */
   padding: 16px;
   font-size: 1.1rem;
-
   border-radius: 8px;
   border: 1px solid $border-input;
   background: $input-bg;
@@ -130,11 +152,8 @@ $border-input: #cccccc;
 
 .button {
   width: 100%;
-
-  /* --- SIZE FIX: Massive premium button --- */
   padding: 18px;
   font-size: 1.2rem;
-
   border-radius: 8px;
   border: none;
   background: #000000;

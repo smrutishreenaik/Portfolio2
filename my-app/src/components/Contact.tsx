@@ -12,12 +12,13 @@ const Contact = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // --- NEW: Ref for the popup image ---
+  const imgRef = useRef<HTMLImageElement>(null);
+
   useFrame(() => {
-    // --- SETTINGS ---
     const totalPages = 16;
     const startPage = 15;
     const duration = 1;
-    // ----------------
 
     const start = startPage / totalPages;
     const end = (startPage + duration) / totalPages;
@@ -43,7 +44,7 @@ const Contact = () => {
         cardRef.current.style.opacity = '1';
       }
 
-      // 2. INNER CONTENT ANIMATION (Text & Form)
+      // 2. INNER CONTENT ANIMATION (Text, Form & Image)
       if (scrollOffset > start - 0.5 / totalPages) {
         const relativeProgress = (scrollOffset - start) / (end - start);
         const clampedProgress = Math.max(0, Math.min(1, relativeProgress));
@@ -55,15 +56,24 @@ const Contact = () => {
           if (index < charsToShow) {
             char.style.opacity = '1';
             char.style.transform = 'translateY(0px)';
-            // --- UPDATED JAVASCRIPT COLORS TO BLACK ---
             char.style.color = '#000000';
           } else {
             char.style.opacity = '0.1';
             char.style.transform = 'translateY(10px)';
-            // --- UPDATED INACTIVE COLOR TO GREY ---
             char.style.color = '#aaaaaa';
           }
         });
+
+        if (imgRef.current) {
+          // The trigger threshold.
+          // 0.2 means "once the section is 20% finished animating in".
+          // As soon as you hit this, the CSS bouncy animation takes over.
+          if (clampedProgress > 0.2) {
+            imgRef.current.classList.add(styles.popped);
+          } else {
+            imgRef.current.classList.remove(styles.popped);
+          }
+        }
 
         // Animate Form Fields
         formRefs.current.forEach((field, index) => {
@@ -92,7 +102,7 @@ const Contact = () => {
       <div ref={containerRef} className={styles.container}>
         {/* ================= THE WHITE SECTION ================= */}
         <div ref={cardRef} className={styles.card}>
-          {/* LEFT SIDE (TEXT) */}
+          {/* LEFT SIDE (TEXT & IMAGE) */}
           <div className={styles.textSection}>
             <h1>
               {text.split('').map((char, i) => (
@@ -107,6 +117,15 @@ const Contact = () => {
                 </span>
               ))}
             </h1>
+
+            {/* NEW: The Popup Image */}
+            <img
+              ref={imgRef}
+              /* Replace this with your actual image path, e.g., '/contact-photo.jpg' */
+              src='https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=600&q=80'
+              alt="Let's work together"
+              className={styles.contactImage}
+            />
           </div>
 
           {/* RIGHT SIDE (FORM) */}
