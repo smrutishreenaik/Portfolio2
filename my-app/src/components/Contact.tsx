@@ -3,6 +3,42 @@ import { useScroll, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import styles from '../styles/Contact.module.scss';
 
+// --- UPDATED: Use your own image paths here ---
+const floatingIconsData = [
+  {
+    id: 1,
+    imgSrc: 'https://cdn-icons-png.flaticon.com/512/1041/1041916.png',
+    top: '-10%',
+    left: '-5%',
+    start: 0.25,
+    end: 0.55,
+  },
+  {
+    id: 2,
+    imgSrc: 'https://cdn-icons-png.flaticon.com/512/732/732200.png',
+    top: '15%',
+    left: '95%',
+    start: 0.4,
+    end: 0.7,
+  },
+  {
+    id: 3,
+    imgSrc: 'https://cdn-icons-png.flaticon.com/512/1370/1370907.png',
+    top: '75%',
+    left: '-8%',
+    start: 0.55,
+    end: 0.85,
+  },
+  {
+    id: 4,
+    imgSrc: 'https://cdn-icons-png.flaticon.com/512/2111/2111463.png',
+    top: '85%',
+    left: '90%',
+    start: 0.7,
+    end: 0.95,
+  },
+];
+
 const Contact = () => {
   const scroll = useScroll();
 
@@ -12,8 +48,8 @@ const Contact = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // --- NEW: Ref for the popup image ---
   const imgRef = useRef<HTMLImageElement>(null);
+  const iconRefs = useRef<(HTMLImageElement | null)[]>([]); // Note: Updated to HTMLImageElement
 
   useFrame(() => {
     const totalPages = 16;
@@ -26,7 +62,6 @@ const Contact = () => {
     if (containerRef.current && cardRef.current) {
       const scrollOffset = scroll.offset;
 
-      // 1. VISIBILITY & RISING ANIMATION
       if (scrollOffset < start - 1 / totalPages) {
         containerRef.current.style.display = 'none';
         containerRef.current.style.pointerEvents = 'none';
@@ -44,13 +79,11 @@ const Contact = () => {
         cardRef.current.style.opacity = '1';
       }
 
-      // 2. INNER CONTENT ANIMATION (Text, Form & Image)
       if (scrollOffset > start - 0.5 / totalPages) {
         const relativeProgress = (scrollOffset - start) / (end - start);
         const clampedProgress = Math.max(0, Math.min(1, relativeProgress));
         const charsToShow = Math.floor(text.length * clampedProgress);
 
-        // Animate Text Characters
         charRefs.current.forEach((char, index) => {
           if (!char) return;
           if (index < charsToShow) {
@@ -65,9 +98,6 @@ const Contact = () => {
         });
 
         if (imgRef.current) {
-          // The trigger threshold.
-          // 0.2 means "once the section is 20% finished animating in".
-          // As soon as you hit this, the CSS bouncy animation takes over.
           if (clampedProgress > 0.2) {
             imgRef.current.classList.add(styles.popped);
           } else {
@@ -75,7 +105,17 @@ const Contact = () => {
           }
         }
 
-        // Animate Form Fields
+        floatingIconsData.forEach((data, index) => {
+          const el = iconRefs.current[index];
+          if (el) {
+            if (clampedProgress >= data.start && clampedProgress <= data.end) {
+              el.classList.add(styles.activeIcon);
+            } else {
+              el.classList.remove(styles.activeIcon);
+            }
+          }
+        });
+
         formRefs.current.forEach((field, index) => {
           if (!field) return;
           const fieldStart = index * 0.15;
@@ -100,9 +140,7 @@ const Contact = () => {
       className={styles.htmlWrapper}
     >
       <div ref={containerRef} className={styles.container}>
-        {/* ================= THE WHITE SECTION ================= */}
         <div ref={cardRef} className={styles.card}>
-          {/* LEFT SIDE (TEXT & IMAGE) */}
           <div className={styles.textSection}>
             <h1>
               {text.split('').map((char, i) => (
@@ -118,17 +156,30 @@ const Contact = () => {
               ))}
             </h1>
 
-            {/* NEW: The Popup Image */}
-            <img
-              ref={imgRef}
-              /* Replace this with your actual image path, e.g., '/contact-photo.jpg' */
-              src='https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=600&q=80'
-              alt="Let's work together"
-              className={styles.contactImage}
-            />
+            <div className={styles.imageContainer}>
+              <img
+                ref={imgRef}
+                src='https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=600&q=80'
+                alt="Let's work together"
+                className={styles.contactImage}
+              />
+
+              {/* --- UPDATED: Rendering <img> tags instead of <div> --- */}
+              {floatingIconsData.map((data, index) => (
+                <img
+                  key={data.id}
+                  ref={(el) => {
+                    iconRefs.current[index] = el;
+                  }}
+                  src={data.imgSrc}
+                  alt='floating decoration'
+                  className={styles.floatingIcon}
+                  style={{ top: data.top, left: data.left }}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* RIGHT SIDE (FORM) */}
           <div className={styles.formSection}>
             <form className={styles.form}>
               {['Name', 'Email', 'Message', 'Button'].map((item, i) => (
