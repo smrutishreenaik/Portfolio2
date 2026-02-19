@@ -14,7 +14,7 @@ function App() {
     <div style={{ height: '100vh', width: '100vw' }}>
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         {/* Increase pages to accommodate the "Stop" duration */}
-        <ScrollControls pages={16} damping={0.3}>
+        <ScrollControls pages={17} damping={0.3}>
           <Experience />
 
           {/* 1. The Normal HTML Content (Intro, About, etc.) */}

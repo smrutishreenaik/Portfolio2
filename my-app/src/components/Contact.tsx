@@ -52,8 +52,8 @@ const Contact = () => {
   const iconRefs = useRef<(HTMLImageElement | null)[]>([]); // Note: Updated to HTMLImageElement
 
   useFrame(() => {
-    const totalPages = 16;
-    const startPage = 15;
+    const totalPages = 17;
+    const startPage = 16;
     const duration = 1;
 
     const start = startPage / totalPages;

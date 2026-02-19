@@ -1,84 +1,68 @@
 import { useRef } from 'react';
 import { useScroll, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import styles from '../styles/Bio.module.scss'; // <--- Import your new SCSS module
-
-const text =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
-
-const img1 =
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80';
-const img2 =
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80';
+import styles from '../styles/Bio.module.scss';
 
 const Bio = () => {
   const scroll = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const coinRef = useRef<HTMLDivElement>(null);
+
+  // Update this to your actual bio text!
+  const text =
+    "Hi, I'm a full-stack developer passionate about building immersive digital experiences.";
 
   useFrame(() => {
-    // --- SETTINGS ---
-    const totalPages = 16;
-    const startPage = 1;
-    const duration = 1;
-    // ----------------
+    // --- TIMING CONFIGURATION ---
+    const totalPages = 17;
+    const startPage = 1; // Adjust this if your bio starts on a different page
+    const duration = 1; // How many scrolls the bio stays on screen
+    // ----------------------------
 
     const start = startPage / totalPages;
     const end = (startPage + duration) / totalPages;
 
     if (containerRef.current) {
       const scrollOffset = scroll.offset;
-      const entranceStart = (startPage - 1) / totalPages;
-      const exitEnd = (startPage + duration + 1) / totalPages;
 
-      // 1. SLIDING LOGIC (Transform Y)
-      if (scrollOffset < start) {
-        if (scrollOffset < entranceStart) {
-          containerRef.current.style.transform = 'translateY(100vh)';
-        } else {
-          const progress = (scrollOffset - entranceStart) / (start - entranceStart);
-          const yPos = (1 - progress) * 100;
-          containerRef.current.style.transform = `translateY(${yPos}vh)`;
-        }
-      } else if (scrollOffset > end) {
-        if (scrollOffset > exitEnd) {
-          containerRef.current.style.transform = 'translateY(-100vh)';
-        } else {
-          const progress = (scrollOffset - end) / (exitEnd - end);
-          const yPos = -progress * 100;
-          containerRef.current.style.transform = `translateY(${yPos}vh)`;
-        }
+      // 1. CONTAINER VISIBILITY LOGIC
+      if (scrollOffset < start - 0.5 / totalPages) {
+        containerRef.current.style.display = 'none';
+        containerRef.current.style.opacity = '0';
+      } else if (scrollOffset > end + 0.5 / totalPages) {
+        containerRef.current.style.display = 'none';
+        containerRef.current.style.opacity = '0';
       } else {
-        containerRef.current.style.transform = 'translateY(0vh)';
-      }
+        containerRef.current.style.display = 'flex';
 
-      // 2. TEXT & COIN ANIMATION
-      if (scrollOffset >= start && scrollOffset <= end) {
-        const progress = (scrollOffset - start) / (end - start);
+        // Fade out slightly when transitioning to the next section
+        const fadeOutProgress = (scrollOffset - end) / (1 / totalPages);
+        containerRef.current.style.opacity = scrollOffset > end ? `${1 - fadeOutProgress}` : '1';
 
-        // A. TEXT REVEAL
-        const charsToShow = Math.floor(text.length * progress);
+        // 2. INNER CONTENT ANIMATION
+        const relativeProgress = (scrollOffset - start) / (end - start);
+        const clampedProgress = Math.max(0, Math.min(1, relativeProgress));
+
+        // --- Text Reveal ---
+        const charsToShow = Math.floor(text.length * clampedProgress);
         charRefs.current.forEach((char, index) => {
           if (!char) return;
           if (index < charsToShow) {
             char.style.opacity = '1';
             char.style.transform = 'translateY(0px)';
-            char.style.filter = 'blur(0px)';
           } else {
-            char.style.opacity = '0.2';
-            char.style.transform = 'translateY(10px)';
-            char.style.filter = 'blur(4px)';
+            char.style.opacity = '0';
+            char.style.transform = 'translateY(20px)';
           }
         });
 
-        // B. COIN ENLARGE & FLIP
-        if (coinRef.current) {
-          const scale = Math.min(1, progress * 2);
-          const flipProgress = Math.max(0, (progress - 0.5) * 2);
-          const rotateY = flipProgress * 180;
-
-          coinRef.current.style.transform = `scale(${scale}) rotateY(${rotateY}deg)`;
+        // --- Portrait Image Reveal ---
+        if (imgRef.current) {
+          // Slide up and fade in along with the text
+          const imgY = 50 - clampedProgress * 50;
+          imgRef.current.style.opacity = `${clampedProgress}`;
+          imgRef.current.style.transform = `translateY(${imgY}px)`;
         }
       }
     }
@@ -88,17 +72,11 @@ const Bio = () => {
     <Html
       portal={{ current: document.body }}
       calculatePosition={() => [0, 0]}
-      // Apply the wrapper class from SCSS
       className={styles.htmlWrapper}
-      style={{
-        // These inline styles are required by @react-three/drei to force positioning
-        width: '100vw',
-        height: '100vh',
-      }}
     >
       <div ref={containerRef} className={styles.container}>
         <div className={styles.contentWrapper}>
-          {/* LEFT: TEXT */}
+          {/* LEFT SIDE: TEXT */}
           <div className={styles.textSection}>
             {text.split('').map((char, i) => (
               <span
@@ -106,21 +84,22 @@ const Bio = () => {
                 ref={(el) => {
                   charRefs.current[i] = el;
                 }}
-                // Use conditional class for spacing
                 className={`${styles.char} ${char === ' ' ? styles.space : ''}`}
-                style={{ opacity: 0.2 }} // Initial state
               >
                 {char}
               </span>
             ))}
           </div>
 
-          {/* RIGHT: COIN */}
-          <div className={styles.coinSection}>
-            <div ref={coinRef} className={styles.coin}>
-              <img src={img1} alt='Me 1' className={styles.coinFace} />
-              <img src={img2} alt='Me 2' className={`${styles.coinFace} ${styles.coinBack}`} />
-            </div>
+          {/* RIGHT SIDE: FULL PORTRAIT IMAGE */}
+          <div className={styles.imageSection}>
+            <img
+              ref={imgRef}
+              /* Replace this with your actual portrait photo URL */
+              src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80'
+              alt='My Portrait'
+              className={styles.portraitImage}
+            />
           </div>
         </div>
       </div>

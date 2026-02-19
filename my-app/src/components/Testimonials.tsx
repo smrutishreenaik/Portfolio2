@@ -37,8 +37,8 @@ const Testimonials = () => {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useFrame(() => {
-    const totalPages = 16;
-    const startPage = 12;
+    const totalPages = 17;
+    const startPage = 13;
     const pinLength = 2;
 
     const start = startPage / totalPages;

@@ -38,8 +38,8 @@ const ExperienceLadder = () => {
   const detailRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useFrame(() => {
-    const totalPages = 16;
-    const startPage = 7;
+    const totalPages = 17;
+    const startPage = 8;
     const duration = 3;
 
     const start = startPage / totalPages;
