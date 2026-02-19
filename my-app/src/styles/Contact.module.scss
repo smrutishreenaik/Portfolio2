@@ -24,20 +24,19 @@ $border-input: #cccccc;
   pointer-events: none;
 }
 
-// --- FULL SCREEN WHITE SECTION (No longer a "card") ---
+// --- FULL SCREEN WHITE SECTION ---
 .card {
   width: 100vw;
-  max-width: none;
   height: 100vh;
-  max-height: none;
-
-  border: none;
-  border-radius: 0;
   background-color: $bg-white;
-  box-shadow: none;
-  backdrop-filter: none;
 
+  /* --- LAYOUT FIX: Bring them closer --- */
   display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8vw; /* This controls the exact distance between Text and Form */
+  padding: 0 5vw;
+
   overflow: hidden;
   will-change: transform;
   opacity: 1;
@@ -46,20 +45,20 @@ $border-input: #cccccc;
 
 // --- LEFT SIDE: TEXT ---
 .textSection {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  // Removed the border-right for a cleaner, open look
 
   h1 {
-    font-size: 3.5rem;
-    line-height: 1.2;
-    max-width: 350px;
+    /* --- SIZE FIX: Bigger Text --- */
+    font-size: 5rem;
+    line-height: 1.1;
+    max-width: 500px; /* Widened so the bigger text wraps nicely */
+
     display: flex;
     flex-wrap: wrap;
-    color: $text-dark; // Black text
+    color: $text-dark;
+    margin: 0;
   }
 }
 
@@ -70,27 +69,24 @@ $border-input: #cccccc;
     transform 0.1s;
 
   &.space {
-    margin-right: 10px;
+    margin-right: 12px; /* Slightly wider space for the bigger font */
   }
 }
 
 // --- RIGHT SIDE: FORM ---
 .formSection {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  background: transparent; // Removed the dark tint
 }
 
 .form {
-  width: 100%;
-  max-width: 350px;
+  /* --- SIZE FIX: Bigger Form --- */
+  width: 450px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px; /* Increased gap between form fields */
 }
 
 .fieldWrapper {
@@ -101,21 +97,27 @@ $border-input: #cccccc;
 // --- INPUTS & LABELS ---
 .label {
   display: block;
-  margin-bottom: 5px;
-  color: $text-dim; // Dark grey
-  font-size: 0.9rem;
+  margin-bottom: 8px;
+  color: $text-dim;
+  font-size: 1.1rem; /* Bigger Label */
+  font-weight: 500;
 }
 
 .input,
 .textarea {
   width: 100%;
-  padding: 12px;
-  border-radius: 6px;
+
+  /* --- SIZE FIX: Taller inputs with bigger text --- */
+  padding: 16px;
+  font-size: 1.1rem;
+
+  border-radius: 8px;
   border: 1px solid $border-input;
   background: $input-bg;
-  color: $text-dark; // Black typing text
+  color: $text-dark;
   outline: none;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 
   &:focus {
     border-color: #000000;
@@ -128,18 +130,18 @@ $border-input: #cccccc;
 
 .button {
   width: 100%;
-  padding: 15px;
+
+  /* --- SIZE FIX: Massive premium button --- */
+  padding: 18px;
+  font-size: 1.2rem;
+
   border-radius: 8px;
   border: none;
-
-  /* Inverted button for light mode */
   background: #000000;
   color: #ffffff;
-
-  font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 15px;
   transition: transform 0.2s;
 
   &:hover {
