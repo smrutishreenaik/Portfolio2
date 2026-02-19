@@ -1,11 +1,9 @@
 // src/components/ExperienceLadder.module.scss
 
-$text-dark: #111;
-$text-medium: #555;
-$text-light: #666;
-$primary-color: #3b82f6;
-$bg-white: #ffffff;
-$border-light: #eee;
+$text-dark: #111111;
+$text-medium: #444444;
+$text-sub: #666666;
+$primary-color: #3b82f6; // Rocket Blue
 
 .htmlWrapper {
   pointer-events: none;
@@ -20,7 +18,7 @@ $border-light: #eee;
   width: 100%;
   height: 100%;
   position: relative;
-  background: $bg-white;
+  background: #ffffff; // Keeping your white background
   will-change: transform;
 }
 
@@ -32,31 +30,31 @@ $border-light: #eee;
   width: 50%;
   height: auto;
   pointer-events: none;
-
-  // Grid trick to stack all cards on top of each other
   display: grid;
   place-items: center start;
-
-  // NOTE: We do NOT use transform: translateY(-50%) here because
-  // the children (cards) handle their own centering transform in JS.
 }
 
 .detailCard {
-  grid-area: 1 / 1; // Forces all cards into the same cell
+  grid-area: 1 / 1;
   width: 100%;
-  background: white;
-  padding: 40px;
-  border-radius: 24px;
-  border: 1px solid $border-light;
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
 
-  // Initial state (overridden by JS)
+  /* --- NEW MODERN LOOK --- */
+  background: linear-gradient(145deg, #ffffff, #f8fafc); // Very subtle white-to-light-grey gradient
+  border-radius: 24px;
+  padding: 50px;
+
+  // A crisp border and a bright blue accent line to match the rocket
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-left: 6px solid $primary-color;
+
+  // Beautiful layered shadow with a tiny hint of blue for a "cool" glow
+  box-shadow:
+    0 25px 50px rgba(59, 130, 246, 0.1),
+    0 4px 15px rgba(0, 0, 0, 0.05);
+
   opacity: 0;
   transform: translateY(-50%);
-
-  transition:
-    opacity 0.1s linear,
-    box-shadow 0.1s linear;
+  transition: opacity 0.1s linear;
   will-change: transform, opacity;
 
   h2 {
@@ -68,14 +66,14 @@ $border-light: #eee;
   h4 {
     font-size: 1.5rem;
     margin: 0 0 20px 0;
-    color: $text-medium;
-    font-weight: 400;
+    color: $primary-color; // Make the company name pop
+    font-weight: 600;
   }
 
   p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #333;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: $text-medium;
     max-width: 600px;
   }
 }
@@ -87,65 +85,78 @@ $border-light: #eee;
   top: 10%;
   bottom: 10%;
   width: 4px;
-  background: rgba(0, 0, 0, 0.1);
+  background: #f1f5f9; // Soft grey track for the rocket
   border-radius: 2px;
 }
 
 .rocket {
   position: absolute;
   left: 80%;
-
-  // DEFAULT STATE: HIDDEN
   opacity: 0;
-  transform: scale(0); // Shrink it too for a pop-in effect
+  transform: scale(0);
 
   width: 60px;
   height: 60px;
   background: $primary-color;
   border-radius: 50%;
-  border: 4px solid white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 4px solid #ffffff; // White border to cut into the line
+  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
-
-  // Add transition for smooth appearance
   transition:
     opacity 0.2s ease,
     transform 0.2s ease;
 }
 
+// --- RIGHT SIDE: POPUP CARD ---
 .popupCard {
   position: absolute;
   left: 80%;
-  // Top is handled by JS
+  width: 200px;
+  padding: 16px 20px;
 
-  width: 180px;
-  padding: 15px;
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  /* --- NEW MODERN LOOK --- */
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 15px 30px rgba(59, 130, 246, 0.15),
+    0 5px 10px rgba(0, 0, 0, 0.05);
 
-  margin-left: 40px; // Push away from ladder
+  margin-left: 45px;
   text-align: left;
   pointer-events: none;
 
-  // Initial State
   opacity: 0;
-  // NOTE: The vertical centering transform (-50%) must be kept in JS logic
   transform: translate(20px, -50%);
 
+  /* --- NEW: Cool CSS Arrow pointing at the rocket --- */
+  &::before {
+    content: '';
+    position: absolute;
+    left: -8px; /* Pull it outside the left edge */
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 8px 8px 8px 0;
+    border-style: solid;
+    border-color: transparent #ffffff transparent transparent;
+    filter: drop-shadow(-2px 0px 1px rgba(0, 0, 0, 0.03)); // Tiny shadow for the arrow
+  }
+
   h3 {
-    margin: 0;
-    font-size: 1rem;
-    color: $text-dark;
+    margin: 0 0 4px 0;
+    font-size: 1.1rem;
+    color: $primary-color; // Blue date
+    font-weight: 700;
   }
 
   div {
-    font-size: 0.8rem;
-    color: $text-light;
+    font-size: 0.9rem;
+    color: $text-sub;
+    font-weight: 500;
   }
 }

@@ -38,11 +38,9 @@ const ExperienceLadder = () => {
   const detailRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useFrame(() => {
-    // --- SETTINGS ---
     const totalPages = 16;
     const startPage = 7;
     const duration = 3;
-    // ----------------
 
     const start = startPage / totalPages;
     const end = (startPage + duration) / totalPages;
@@ -52,11 +50,11 @@ const ExperienceLadder = () => {
       const entranceStart = (startPage - 1) / totalPages;
       const exitEnd = (startPage + duration + 1) / totalPages;
 
-      // 1. CONTAINER VISIBILITY (Slide In/Out)
+      // 1. CONTAINER VISIBILITY
       if (scrollOffset < start) {
         if (scrollOffset < entranceStart) {
           containerRef.current.style.transform = 'translateY(100vh)';
-          containerRef.current.style.display = 'none'; // Optimize
+          containerRef.current.style.display = 'none';
         } else {
           containerRef.current.style.display = 'block';
           const progress = (scrollOffset - entranceStart) / (start - entranceStart);
@@ -66,7 +64,7 @@ const ExperienceLadder = () => {
       } else if (scrollOffset > end) {
         if (scrollOffset > exitEnd) {
           containerRef.current.style.transform = 'translateY(-100vh)';
-          containerRef.current.style.display = 'none'; // Optimize
+          containerRef.current.style.display = 'none';
         } else {
           containerRef.current.style.display = 'block';
           const progress = (scrollOffset - end) / (exitEnd - end);
@@ -77,18 +75,14 @@ const ExperienceLadder = () => {
         containerRef.current.style.display = 'block';
         containerRef.current.style.transform = 'translateY(0vh)';
       }
-      containerRef.current.style.pointerEvents = 'none'; // Never block scroll
+      containerRef.current.style.pointerEvents = 'none';
 
       // 2. ROCKET & CARD ANIMATION LOOP
-      // STRICT CHECK: Are we actually inside the active ladder section?
       if (scrollOffset >= start && scrollOffset <= end) {
-        // REVEAL ROCKET
         avatarRef.current.style.opacity = '1';
         avatarRef.current.style.transform = 'translate(-50%, -50%) scale(1)';
 
         const progress = (scrollOffset - start) / (end - start);
-
-        // Move Rocket (Bottom to Top)
         const avatarTop = 90 - 80 * progress;
         avatarRef.current.style.top = `${avatarTop}%`;
 
@@ -108,11 +102,11 @@ const ExperienceLadder = () => {
           if (detail) {
             detail.style.opacity = `${visibility}`;
             detail.style.transform = `translateY(-50%) scale(${0.95 + visibility * 0.05})`;
+            // Note: The Javascript box-shadow override was removed here so the CSS shadow works!
             detail.style.pointerEvents = visibility > 0.5 ? 'auto' : 'none';
           }
         });
       } else {
-        // HIDE ROCKET if outside the section
         avatarRef.current.style.opacity = '0';
         avatarRef.current.style.transform = 'translate(-50%, -50%) scale(0)';
       }
@@ -124,10 +118,6 @@ const ExperienceLadder = () => {
       portal={{ current: document.body }}
       calculatePosition={() => [0, 0]}
       className={styles.htmlWrapper}
-      style={{
-        width: '100vw',
-        height: '100vh',
-      }}
     >
       <div ref={containerRef} className={styles.container}>
         {/* LEFT SIDE: DETAILS */}
