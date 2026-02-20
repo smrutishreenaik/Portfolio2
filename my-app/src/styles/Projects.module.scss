@@ -23,26 +23,30 @@ $text-dim: #cccccc;
 // --- TITLES ---
 .titleWrapper {
   position: absolute;
-  left: 0;
+  /* Shifted from center to the left edge to align with the incoming cards */
+  left: 4vw;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   z-index: 10;
   pointer-events: none;
 
+  /* Adjusted vertical spacing to accommodate taller cards */
   &.top {
-    top: 2%;
+    top: 3%;
   }
   &.bottom {
-    top: 52%;
+    top: 51%;
   }
 }
 
 .mainTitle {
-  font-size: 3rem;
+  font-size: 3.5rem; /* Slightly larger */
   margin: 0;
   color: $text-light;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8); // Stronger shadow for the image background
+  font-weight: 800; /* Bolder */
+  letter-spacing: -1.5px; /* Tighter tracking for that modern tech look */
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
   display: flex;
 }
 
@@ -54,11 +58,11 @@ $text-dim: #cccccc;
   transform: translateY(15px);
 
   &.space {
-    margin-right: 10px;
+    margin-right: 12px; /* Adjusted space width to match the tighter letters */
   }
 }
 
-// --- SCROLL STRIPS ---
+// --- SCROLL STRIPS (Adjusted to give titles breathing room) ---
 .stripContainer {
   position: absolute;
   left: 0;
@@ -67,11 +71,12 @@ $text-dim: #cccccc;
   display: flex;
   align-items: center;
 
+  /* Pushed down slightly so the taller cards don't overlap the text */
   &.top {
-    top: 8%;
+    top: 11%;
   }
   &.bottom {
-    top: 58%;
+    top: 59%;
   }
 }
 
@@ -79,9 +84,9 @@ $text-dim: #cccccc;
   display: flex;
   width: max-content;
   will-change: transform;
-  padding: 20px 0;
+  /* Added left padding so the first card aligns beautifully with the left-aligned title */
+  padding: 20px 0 20px 4vw;
 }
-
 // --- NEW BEAUTIFUL IMAGE CARDS ---
 // src/components/Projects.module.scss
 
@@ -90,23 +95,27 @@ $text-dim: #cccccc;
 // --- NEW BEAUTIFUL IMAGE CARDS ---
 .card {
   position: relative;
-  width: 25vw;
-  min-width: 320px;
-  height: 32vh;
-  min-height: 280px;
-  margin-right: 4vw;
-  border-radius: 20px;
-  overflow: hidden;
 
-  /* Keep pointer events so the button can be clicked, but remove cursor: pointer from the whole card */
+  /* --- SHAPE UPDATE: Sleeker, taller poster-like ratio --- */
+  width: 24vw;
+  min-width: 300px;
+  height: 38vh;
+  min-height: 320px;
+
+  /* --- CLOSENESS UPDATE: Tighter gap between cards --- */
+  margin-right: 2vw;
+
+  /* --- SHAPE UPDATE: Ultra-smooth, modern rounded corners --- */
+  border-radius: 32px;
+
+  overflow: hidden;
   pointer-events: none;
   transform: translateZ(0);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* --- THE MAGIC FIX --- */
-/* This tells the card: ONLY zoom the image if the user is hovering the View button */
+/* --- THE MAGIC FIX (Keep this exactly as it was) --- */
 .card:has(.viewButton:hover) .cardImage {
   transform: scale(1.05);
 }
