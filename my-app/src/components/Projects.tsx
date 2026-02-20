@@ -1,21 +1,62 @@
 import { useRef } from 'react';
 import { useScroll, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import styles from '../styles/Projects.module.scss'; // <--- Import Styles
+import styles from '../styles/Projects.module.scss';
 
+// Updated data with Images and 10-word notes
 const rawProjects = [
-  { title: 'E-Com Core', desc: '.NET Microservices', color: '#fca5a5' },
-  { title: 'Health Dash', desc: 'React & D3', color: '#86efac' },
-  { title: 'Crypto Track', desc: 'WebSockets', color: '#93c5fd' },
-  { title: '3D Portfolio', desc: 'Three.js', color: '#c4b5fd' },
+  {
+    title: 'E-Com Core',
+    note: 'Scalable .NET microservices handling thousands of daily transactions seamlessly.',
+    image:
+      'https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: 'Health Dash',
+    note: 'Interactive React and D3 dashboards for real-time patient monitoring analytics.',
+    image:
+      'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: 'Crypto Track',
+    note: 'High-performance WebSocket integration delivering live cryptocurrency market data updates.',
+    image:
+      'https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: '3D Portfolio',
+    note: 'Immersive WebGL experience built with Three.js and React Fiber.',
+    image:
+      'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
+  },
 ];
 const projects = [...rawProjects, ...rawProjects];
 
 const rawCaseStudies = [
-  { title: 'Bank App', desc: 'Security Audit', color: '#fcd34d' },
-  { title: 'Cloud Move', desc: 'Azure Migration', color: '#fb7185' },
-  { title: 'AI Chatbot', desc: 'OpenAI Integ', color: '#2dd4bf' },
-  { title: 'SaaS Scale', desc: '10k to 1M Users', color: '#a78bfa' },
+  {
+    title: 'Bank App',
+    note: 'Comprehensive security audit and penetration testing for financial mobile application.',
+    image:
+      'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: 'Cloud Move',
+    note: 'Flawless zero-downtime migration of legacy systems to Microsoft Azure infrastructure.',
+    image:
+      'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: 'AI Chatbot',
+    note: 'OpenAI integration streamlining customer support workflows and reducing response times.',
+    image:
+      'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: 'SaaS Scale',
+    note: 'Architectural overhaul scaling a startup platform from 10k to 1M users.',
+    image:
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
+  },
 ];
 const caseStudies = [...rawCaseStudies, ...rawCaseStudies];
 
@@ -74,8 +115,6 @@ const Projects = () => {
         const safeProgress = Math.max(0, Math.min(1, progress));
 
         // --- A. TEXT REVEAL LOGIC ---
-
-        // 1. CASE STUDIES (0.0 to 0.25)
         const caseRevealProgress = Math.min(1, safeProgress / 0.25);
         const caseCharsToShow = Math.floor(caseTitle.length * caseRevealProgress);
 
@@ -86,7 +125,6 @@ const Projects = () => {
           }
         });
 
-        // 2. PROJECTS (0.25 to 0.50)
         const projRevealProgress = Math.min(1, Math.max(0, (safeProgress - 0.25) / 0.25));
         const projCharsToShow = Math.floor(projectTitle.length * projRevealProgress);
 
@@ -116,7 +154,7 @@ const Projects = () => {
       className={styles.htmlWrapper}
     >
       <div ref={containerRef} className={styles.container}>
-        {/* ================= PROJECT TITLE (CENTERED) ================= */}
+        {/* ================= PROJECT TITLE ================= */}
         <div className={`${styles.titleWrapper} ${styles.top}`}>
           <h1 className={styles.mainTitle}>
             {projectTitle.split('').map((char, i) => (
@@ -137,19 +175,23 @@ const Projects = () => {
         <div className={`${styles.stripContainer} ${styles.top}`}>
           <div ref={topStripRef} className={styles.strip}>
             {projects.map((p, i) => (
-              <div
-                key={i}
-                className={`${styles.card} ${styles.projectCard}`}
-                style={{ background: p.color }} // Dynamic Color
-              >
-                <h3 className={styles.cardTitle}>{p.title}</h3>
-                <p className={styles.cardDesc}>{p.desc}</p>
+              <div key={i} className={styles.card}>
+                <img src={p.image} alt={p.title} className={styles.cardImage} />
+                <div className={styles.cardOverlay} />
+
+                <div className={styles.cardContent}>
+                  <h3 className={styles.cardTitle}>{p.title}</h3>
+                  <p className={styles.cardNote}>{p.note}</p>
+                  <button type='button' className={styles.viewButton}>
+                    View
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* ================= CASE STUDIES TITLE (CENTERED) ================= */}
+        {/* ================= CASE STUDIES TITLE ================= */}
         <div className={`${styles.titleWrapper} ${styles.bottom}`}>
           <h1 className={styles.mainTitle}>
             {caseTitle.split('').map((char, i) => (
@@ -170,13 +212,17 @@ const Projects = () => {
         <div className={`${styles.stripContainer} ${styles.bottom}`}>
           <div ref={bottomStripRef} className={styles.strip}>
             {caseStudies.map((c, i) => (
-              <div
-                key={i}
-                className={`${styles.card} ${styles.caseStudyCard}`}
-                style={{ border: `3px solid ${c.color}` }} // Dynamic Border Color
-              >
-                <h3 className={styles.cardTitle}>{c.title}</h3>
-                <p className={styles.cardDesc}>{c.desc}</p>
+              <div key={i} className={styles.card}>
+                <img src={c.image} alt={c.title} className={styles.cardImage} />
+                <div className={styles.cardOverlay} />
+
+                <div className={styles.cardContent}>
+                  <h3 className={styles.cardTitle}>{c.title}</h3>
+                  <p className={styles.cardNote}>{c.note}</p>
+                  <button type='button' className={styles.viewButton}>
+                    View
+                  </button>
+                </div>
               </div>
             ))}
           </div>
