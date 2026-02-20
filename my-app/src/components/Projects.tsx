@@ -1,37 +1,92 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useScroll, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import styles from '../styles/Projects.module.scss';
 
-// Updated data with Images and 10-word notes
+// --- UPDATED DATA STRUCTURE ---
 const rawProjects = [
   {
+    id: 1,
     title: 'E-Com Core',
     note: 'Scalable .NET microservices handling thousands of daily transactions seamlessly.',
     image:
       'https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80',
+    description:
+      'A comprehensive deep dive into the architecture of a high-traffic e-commerce backend. Built from the ground up to ensure high availability, fault tolerance, and rapid deployment cycles using modern CI/CD pipelines.',
+    techStack: ['.NET 8', 'React', 'Azure Service Bus', 'SQL Server', 'Redis'],
+    github: 'https://github.com',
+    live: 'https://example.com',
+    gallery: [
+      {
+        url: 'https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1200&q=80',
+        caption: 'Main Dashboard with real-time analytics and revenue tracking.',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1200&q=80',
+        caption: 'Microservices architecture topology map.',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
+        caption: 'Admin panel for dynamic inventory management.',
+      },
+    ],
   },
+  // Add similar detailed data for the rest of your projects!
   {
+    id: 2,
     title: 'Health Dash',
     note: 'Interactive React and D3 dashboards for real-time patient monitoring analytics.',
     image:
       'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=800&q=80',
+    description: 'Patient monitoring system...',
+    techStack: ['React', 'D3.js', 'Node.js'],
+    github: '#',
+    live: '#',
+    gallery: [
+      {
+        url: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1200&q=80',
+        caption: 'Overview',
+      },
+    ],
   },
   {
+    id: 3,
     title: 'Crypto Track',
     note: 'High-performance WebSocket integration delivering live cryptocurrency market data updates.',
     image:
       'https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=800&q=80',
+    description: 'Live tracker...',
+    techStack: ['React', 'WebSockets', 'Tailwind'],
+    github: '#',
+    live: '#',
+    gallery: [
+      {
+        url: 'https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=1200&q=80',
+        caption: 'Live Feed',
+      },
+    ],
   },
   {
+    id: 4,
     title: '3D Portfolio',
     note: 'Immersive WebGL experience built with Three.js and React Fiber.',
     image:
       'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
+    description: 'My personal site...',
+    techStack: ['Three.js', 'React Three Fiber', 'SCSS'],
+    github: '#',
+    live: '#',
+    gallery: [
+      {
+        url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
+        caption: 'Hero Section',
+      },
+    ],
   },
 ];
-const projects = [...rawProjects, ...rawProjects];
+const projects = [...rawProjects, ...rawProjects]; // Duplicated for infinite scroll illusion
 
+// ... (Keep caseStudies array exactly the same as before) ...
 const rawCaseStudies = [
   {
     title: 'Bank App',
@@ -71,18 +126,44 @@ const Projects = () => {
   const projTitleRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const caseTitleRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
+  // --- NEW: MODAL STATE ---
+  const [activeProject, setActiveProject] = useState<any | null>(null);
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
+
+  const openModal = (project: any) => {
+    setActiveProject(project);
+    setCurrentImgIndex(0); // Reset gallery index when opening a new project
+  };
+
+  const closeModal = () => {
+    setActiveProject(null);
+  };
+
+  const nextImage = () => {
+    if (activeProject?.gallery) {
+      setCurrentImgIndex((prev) => (prev + 1) % activeProject.gallery.length);
+    }
+  };
+
+  const prevImage = () => {
+    if (activeProject?.gallery) {
+      setCurrentImgIndex(
+        (prev) => (prev - 1 + activeProject.gallery.length) % activeProject.gallery.length,
+      );
+    }
+  };
+
   useFrame(() => {
+    // ... (Keep the entire useFrame animation logic exactly the same as before) ...
     const totalPages = 17;
     const startPage = 4;
     const pinLength = 3;
-
     const start = startPage / totalPages;
     const end = (startPage + pinLength) / totalPages;
 
     if (containerRef.current && topStripRef.current && bottomStripRef.current) {
       const scrollOffset = scroll.offset;
 
-      // 1. VISIBILITY LOGIC
       if (scrollOffset < start) {
         const entranceStart = (startPage - 1) / totalPages;
         if (scrollOffset < entranceStart) {
@@ -109,15 +190,12 @@ const Projects = () => {
         containerRef.current.style.pointerEvents = 'none';
       }
 
-      // 2. ANIMATION LOGIC
       if (containerRef.current.style.display !== 'none') {
         const progress = (scrollOffset - start) / (end - start);
         const safeProgress = Math.max(0, Math.min(1, progress));
 
-        // --- A. TEXT REVEAL LOGIC ---
         const caseRevealProgress = Math.min(1, safeProgress / 0.25);
         const caseCharsToShow = Math.floor(caseTitle.length * caseRevealProgress);
-
         caseTitleRefs.current.forEach((char, i) => {
           if (char) {
             char.style.opacity = i < caseCharsToShow ? '1' : '0';
@@ -127,7 +205,6 @@ const Projects = () => {
 
         const projRevealProgress = Math.min(1, Math.max(0, (safeProgress - 0.25) / 0.25));
         const projCharsToShow = Math.floor(projectTitle.length * projRevealProgress);
-
         projTitleRefs.current.forEach((char, i) => {
           if (char) {
             char.style.opacity = i < projCharsToShow ? '1' : '0';
@@ -135,12 +212,9 @@ const Projects = () => {
           }
         });
 
-        // --- B. STRIP MOVEMENT LOGIC ---
         const totalTravel = 200;
-
         const xTop = -totalTravel + safeProgress * totalTravel;
         topStripRef.current.style.transform = `translateX(${xTop}vw)`;
-
         const xBottom = -(safeProgress * totalTravel);
         bottomStripRef.current.style.transform = `translateX(${xBottom}vw)`;
       }
@@ -154,7 +228,6 @@ const Projects = () => {
       className={styles.htmlWrapper}
     >
       <div ref={containerRef} className={styles.container}>
-        {/* ================= PROJECT TITLE ================= */}
         <div className={`${styles.titleWrapper} ${styles.top}`}>
           <h1 className={styles.mainTitle}>
             {projectTitle.split('').map((char, i) => (
@@ -171,18 +244,17 @@ const Projects = () => {
           </h1>
         </div>
 
-        {/* ================= TOP STRIP (PROJECTS) ================= */}
         <div className={`${styles.stripContainer} ${styles.top}`}>
           <div ref={topStripRef} className={styles.strip}>
             {projects.map((p, i) => (
               <div key={i} className={styles.card}>
                 <img src={p.image} alt={p.title} className={styles.cardImage} />
                 <div className={styles.cardOverlay} />
-
                 <div className={styles.cardContent}>
                   <h3 className={styles.cardTitle}>{p.title}</h3>
                   <p className={styles.cardNote}>{p.note}</p>
-                  <button type='button' className={styles.viewButton}>
+                  {/* --- NEW: Button triggers Modal --- */}
+                  <button type='button' className={styles.viewButton} onClick={() => openModal(p)}>
                     View
                   </button>
                 </div>
@@ -191,7 +263,6 @@ const Projects = () => {
           </div>
         </div>
 
-        {/* ================= CASE STUDIES TITLE ================= */}
         <div className={`${styles.titleWrapper} ${styles.bottom}`}>
           <h1 className={styles.mainTitle}>
             {caseTitle.split('').map((char, i) => (
@@ -208,14 +279,12 @@ const Projects = () => {
           </h1>
         </div>
 
-        {/* ================= BOTTOM STRIP (CASE STUDIES) ================= */}
         <div className={`${styles.stripContainer} ${styles.bottom}`}>
           <div ref={bottomStripRef} className={styles.strip}>
             {caseStudies.map((c, i) => (
               <div key={i} className={styles.card}>
                 <img src={c.image} alt={c.title} className={styles.cardImage} />
                 <div className={styles.cardOverlay} />
-
                 <div className={styles.cardContent}>
                   <h3 className={styles.cardTitle}>{c.title}</h3>
                   <p className={styles.cardNote}>{c.note}</p>
@@ -228,6 +297,80 @@ const Projects = () => {
           </div>
         </div>
       </div>
+
+      {/* ==================================================== */}
+      {/* ================= THE POPUP MODAL ================== */}
+      {/* ==================================================== */}
+      {activeProject && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          {/* Prevent clicks inside the modal from closing it */}
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.closeButton} onClick={closeModal}>
+              &times;
+            </button>
+
+            {/* LEFT SIDE: Gallery Carousel */}
+            <div className={styles.modalLeft}>
+              <img
+                src={activeProject.gallery[currentImgIndex].url}
+                alt='Project Screenshot'
+                className={styles.carouselImage}
+              />
+
+              {activeProject.gallery.length > 1 && (
+                <div className={styles.carouselControls}>
+                  <button className={styles.navButton} onClick={(e) => prevImage(e)}>
+                    &#8592;
+                  </button>
+                  <button className={styles.navButton} onClick={(e) => nextImage(e)}>
+                    &#8594;
+                  </button>
+                </div>
+              )}
+
+              <div className={styles.pictureDetails}>
+                {activeProject.gallery[currentImgIndex].caption}
+              </div>
+            </div>
+
+            {/* RIGHT SIDE: Text Data */}
+            <div className={styles.modalRight}>
+              <h2 className={styles.modalTitle}>{activeProject.title}</h2>
+
+              <div className={styles.modalLinks}>
+                <a
+                  href={activeProject.live}
+                  target='_blank'
+                  rel='noreferrer'
+                  className={`${styles.linkBtn} ${styles.primary}`}
+                >
+                  Live Site
+                </a>
+                <a
+                  href={activeProject.github}
+                  target='_blank'
+                  rel='noreferrer'
+                  className={`${styles.linkBtn} ${styles.secondary}`}
+                >
+                  GitHub
+                </a>
+              </div>
+
+              <h4 className={styles.sectionHeading}>About the Project</h4>
+              <p className={styles.modalDescription}>{activeProject.description}</p>
+
+              <h4 className={styles.sectionHeading}>Tech Stack</h4>
+              <div className={styles.techStack}>
+                {activeProject.techStack.map((tech: string, i: number) => (
+                  <span key={i} className={styles.techPill}>
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </Html>
   );
 };

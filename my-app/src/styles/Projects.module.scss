@@ -205,3 +205,223 @@ $text-dim: #cccccc;
     transform: translateY(-2px);
   }
 }
+
+// src/components/Projects.module.scss
+
+// ... (Keep all your existing styles above this exactly the same) ...
+
+// ==========================================
+// --- NEW: PROJECT MODAL STYLES ---
+// ==========================================
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto; /* CRITICAL: Enables clicking inside the modal */
+
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.modalContent {
+  width: 85vw;
+  max-width: 1200px;
+  height: 80vh;
+  max-height: 800px;
+  background: #0a0a0a;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.8),
+    inset 0 0 20px rgba(255, 255, 255, 0.02);
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  transform: translateY(20px) scale(0.98);
+  animation: slideUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes slideUp {
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.1) rotate(90deg);
+  }
+}
+
+// --- MODAL LEFT: CAROUSEL ---
+.modalLeft {
+  flex: 1.2;
+  position: relative;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.carouselImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; // Ensures whole image is visible
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.carouselControls {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-sizing: border-box;
+  transform: translateY(-50%);
+}
+
+.navButton {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.9);
+    color: black;
+  }
+}
+
+.pictureDetails {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  color: #cccccc;
+  font-size: 0.95rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+// --- MODAL RIGHT: DETAILS ---
+.modalRight {
+  flex: 1;
+  padding: 50px 40px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.modalTitle {
+  font-size: 2.5rem;
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.modalLinks {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.linkBtn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &.primary {
+    background: #ffffff;
+    color: #000000;
+
+    &:hover {
+      background: #dddddd;
+    }
+  }
+
+  &.secondary {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+.sectionHeading {
+  font-size: 1.1rem;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+}
+
+.modalDescription {
+  color: #aaaaaa;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.techStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.techPill {
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: #cccccc;
+  font-size: 0.85rem;
+}
