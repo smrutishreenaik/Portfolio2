@@ -3,8 +3,29 @@ import { useScroll, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import styles from '../styles/Projects.module.scss';
 
+// ==========================================
+// --- NEW: TYPESCRIPT INTERFACES ---
+// ==========================================
+interface GalleryImage {
+  url: string;
+  caption: string;
+}
+
+interface ProjectData {
+  id?: number;
+  title: string;
+  note: string;
+  image: string;
+  description?: string;
+  techStack?: string[];
+  github?: string;
+  live?: string;
+  gallery?: GalleryImage[];
+}
+
 // --- UPDATED DATA STRUCTURE ---
-const rawProjects = [
+// Note: We tell TypeScript this array holds 'ProjectData' objects
+const rawProjects: ProjectData[] = [
   {
     id: 1,
     title: 'E-Com Core',
@@ -31,7 +52,6 @@ const rawProjects = [
       },
     ],
   },
-  // Add similar detailed data for the rest of your projects!
   {
     id: 2,
     title: 'Health Dash',
@@ -84,10 +104,9 @@ const rawProjects = [
     ],
   },
 ];
-const projects = [...rawProjects, ...rawProjects]; // Duplicated for infinite scroll illusion
+const projects = [...rawProjects, ...rawProjects];
 
-// ... (Keep caseStudies array exactly the same as before) ...
-const rawCaseStudies = [
+const rawCaseStudies: ProjectData[] = [
   {
     title: 'Bank App',
     note: 'Comprehensive security audit and penetration testing for financial mobile application.',
@@ -126,35 +145,43 @@ const Projects = () => {
   const projTitleRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const caseTitleRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
-  // --- NEW: MODAL STATE ---
-  const [activeProject, setActiveProject] = useState<any | null>(null);
+  // --- FIX: Using the ProjectData interface instead of 'any' ---
+  const [activeProject, setActiveProject] = useState<ProjectData | null>(null);
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
-  const openModal = (project: any) => {
+  // --- FIX: Ensuring the parameter is strictly typed ---
+  const openModal = (project: ProjectData) => {
     setActiveProject(project);
-    setCurrentImgIndex(0); // Reset gallery index when opening a new project
+    setCurrentImgIndex(0);
   };
 
   const closeModal = () => {
     setActiveProject(null);
   };
 
-  const nextImage = () => {
-    if (activeProject?.gallery) {
-      setCurrentImgIndex((prev) => (prev + 1) % activeProject.gallery.length);
+  // --- FIX: Adding React.MouseEvent to keep TS happy when dealing with clicks ---
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    // Grab the length first so TypeScript is 100% sure it exists and is a number
+    const galleryLength = activeProject?.gallery?.length;
+
+    if (galleryLength) {
+      setCurrentImgIndex((prev) => (prev + 1) % galleryLength);
     }
   };
 
-  const prevImage = () => {
-    if (activeProject?.gallery) {
-      setCurrentImgIndex(
-        (prev) => (prev - 1 + activeProject.gallery.length) % activeProject.gallery.length,
-      );
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    const galleryLength = activeProject?.gallery?.length;
+
+    if (galleryLength) {
+      setCurrentImgIndex((prev) => (prev - 1 + galleryLength) % galleryLength);
     }
   };
 
   useFrame(() => {
-    // ... (Keep the entire useFrame animation logic exactly the same as before) ...
     const totalPages = 17;
     const startPage = 4;
     const pinLength = 3;
@@ -253,7 +280,6 @@ const Projects = () => {
                 <div className={styles.cardContent}>
                   <h3 className={styles.cardTitle}>{p.title}</h3>
                   <p className={styles.cardNote}>{p.note}</p>
-                  {/* --- NEW: Button triggers Modal --- */}
                   <button type='button' className={styles.viewButton} onClick={() => openModal(p)}>
                     View
                   </button>
@@ -288,7 +314,7 @@ const Projects = () => {
                 <div className={styles.cardContent}>
                   <h3 className={styles.cardTitle}>{c.title}</h3>
                   <p className={styles.cardNote}>{c.note}</p>
-                  <button type='button' className={styles.viewButton}>
+                  <button type='button' className={styles.viewButton} onClick={() => openModal(c)}>
                     View
                   </button>
                 </div>
@@ -298,12 +324,8 @@ const Projects = () => {
         </div>
       </div>
 
-      {/* ==================================================== */}
-      {/* ================= THE POPUP MODAL ================== */}
-      {/* ==================================================== */}
       {activeProject && (
         <div className={styles.modalOverlay} onClick={closeModal}>
-          {/* Prevent clicks inside the modal from closing it */}
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <button className={styles.closeButton} onClick={closeModal}>
               &times;
@@ -311,26 +333,36 @@ const Projects = () => {
 
             {/* LEFT SIDE: Gallery Carousel */}
             <div className={styles.modalLeft}>
-              <img
-                src={activeProject.gallery[currentImgIndex].url}
-                alt='Project Screenshot'
-                className={styles.carouselImage}
-              />
+              {activeProject.gallery && activeProject.gallery.length > 0 ? (
+                <>
+                  <img
+                    src={activeProject.gallery[currentImgIndex].url}
+                    alt='Project Screenshot'
+                    className={styles.carouselImage}
+                  />
 
-              {activeProject.gallery.length > 1 && (
-                <div className={styles.carouselControls}>
-                  <button className={styles.navButton} onClick={(e) => prevImage(e)}>
-                    &#8592;
-                  </button>
-                  <button className={styles.navButton} onClick={(e) => nextImage(e)}>
-                    &#8594;
-                  </button>
-                </div>
+                  {activeProject.gallery.length > 1 && (
+                    <div className={styles.carouselControls}>
+                      <button className={styles.navButton} onClick={(e) => prevImage(e)}>
+                        &#8592;
+                      </button>
+                      <button className={styles.navButton} onClick={(e) => nextImage(e)}>
+                        &#8594;
+                      </button>
+                    </div>
+                  )}
+
+                  <div className={styles.pictureDetails}>
+                    {activeProject.gallery[currentImgIndex].caption}
+                  </div>
+                </>
+              ) : (
+                <img
+                  src={activeProject.image}
+                  alt='Project Cover'
+                  className={styles.carouselImage}
+                />
               )}
-
-              <div className={styles.pictureDetails}>
-                {activeProject.gallery[currentImgIndex].caption}
-              </div>
             </div>
 
             {/* RIGHT SIDE: Text Data */}
@@ -338,35 +370,47 @@ const Projects = () => {
               <h2 className={styles.modalTitle}>{activeProject.title}</h2>
 
               <div className={styles.modalLinks}>
-                <a
-                  href={activeProject.live}
-                  target='_blank'
-                  rel='noreferrer'
-                  className={`${styles.linkBtn} ${styles.primary}`}
-                >
-                  Live Site
-                </a>
-                <a
-                  href={activeProject.github}
-                  target='_blank'
-                  rel='noreferrer'
-                  className={`${styles.linkBtn} ${styles.secondary}`}
-                >
-                  GitHub
-                </a>
+                {activeProject.live && activeProject.live !== '#' && (
+                  <a
+                    href={activeProject.live}
+                    target='_blank'
+                    rel='noreferrer'
+                    className={`${styles.linkBtn} ${styles.primary}`}
+                  >
+                    Live Site
+                  </a>
+                )}
+                {activeProject.github && activeProject.github !== '#' && (
+                  <a
+                    href={activeProject.github}
+                    target='_blank'
+                    rel='noreferrer'
+                    className={`${styles.linkBtn} ${styles.secondary}`}
+                  >
+                    GitHub
+                  </a>
+                )}
               </div>
 
-              <h4 className={styles.sectionHeading}>About the Project</h4>
-              <p className={styles.modalDescription}>{activeProject.description}</p>
+              {activeProject.description && (
+                <>
+                  <h4 className={styles.sectionHeading}>About the Project</h4>
+                  <p className={styles.modalDescription}>{activeProject.description}</p>
+                </>
+              )}
 
-              <h4 className={styles.sectionHeading}>Tech Stack</h4>
-              <div className={styles.techStack}>
-                {activeProject.techStack.map((tech: string, i: number) => (
-                  <span key={i} className={styles.techPill}>
-                    {tech}
-                  </span>
-                ))}
-              </div>
+              {activeProject.techStack && (
+                <>
+                  <h4 className={styles.sectionHeading}>Tech Stack</h4>
+                  <div className={styles.techStack}>
+                    {activeProject.techStack.map((tech: string, i: number) => (
+                      <span key={i} className={styles.techPill}>
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
