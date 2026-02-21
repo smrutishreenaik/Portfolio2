@@ -3,28 +3,32 @@ import { useScroll, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import styles from '../styles/ExperienceLadder.module.scss';
 
+// --- UPDATED DATA WITH URLS AND .NET PROGRESSION ---
 const jobs = [
   {
     id: 1,
-    title: 'Junior Dev',
-    company: 'Startup Inc',
-    date: '2020 - 2021',
+    title: 'Software Developer',
+    company: 'Tech Solutions Inc',
+    url: 'https://example.com/tech-solutions', // Add your actual links here!
+    date: '2022 - 2024',
     details:
-      'Started my journey building UI components with React. Learned the basics of CI/CD and agile workflows. Optimized legacy code for better performance.',
+      'Developed and maintained enterprise applications using C# and ASP.NET. Collaborated with the team to design database schemas in SQL Server and implemented RESTful APIs.',
   },
   {
     id: 2,
-    title: 'Mid-Level Engineer',
-    company: 'Tech Corp',
-    date: '2021 - 2023',
+    title: 'Full-Stack .NET Developer',
+    company: 'Innovate Corp',
+    url: 'https://example.com/innovate',
+    date: '2024 - Present',
     details:
-      'Led the migration to Next.js. Mentored 2 junior developers and introduced automated testing. Reduced server costs by 30% through optimized caching.',
+      'Leading the development of full-stack features utilizing .NET Core Web API, Entity Framework, and React. Architecting scalable cloud solutions deployed on Azure with automated CI/CD pipelines.',
   },
   {
     id: 3,
     title: 'Senior Architect',
     company: 'Big Data Systems',
     date: '2023 - Present',
+    url: 'https://example.com/innovate',
     details:
       'Designing scalable microservices architecture. Managing cloud infrastructure on AWS. Directing technical strategy for high-traffic enterprise applications.',
   },
@@ -38,6 +42,7 @@ const ExperienceLadder = () => {
   const detailRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useFrame(() => {
+    // ... (Keep ALL your useFrame animation logic exactly the same) ...
     const totalPages = 17;
     const startPage = 8;
     const duration = 3;
@@ -50,7 +55,6 @@ const ExperienceLadder = () => {
       const entranceStart = (startPage - 1) / totalPages;
       const exitEnd = (startPage + duration + 1) / totalPages;
 
-      // 1. CONTAINER VISIBILITY
       if (scrollOffset < start) {
         if (scrollOffset < entranceStart) {
           containerRef.current.style.transform = 'translateY(100vh)';
@@ -77,7 +81,6 @@ const ExperienceLadder = () => {
       }
       containerRef.current.style.pointerEvents = 'none';
 
-      // 2. ROCKET & CARD ANIMATION LOOP
       if (scrollOffset >= start && scrollOffset <= end) {
         avatarRef.current.style.opacity = '1';
         avatarRef.current.style.transform = 'translate(-50%, -50%) scale(1)';
@@ -102,7 +105,6 @@ const ExperienceLadder = () => {
           if (detail) {
             detail.style.opacity = `${visibility}`;
             detail.style.transform = `translateY(-50%) scale(${0.95 + visibility * 0.05})`;
-            // Note: The Javascript box-shadow override was removed here so the CSS shadow works!
             detail.style.pointerEvents = visibility > 0.5 ? 'auto' : 'none';
           }
         });
@@ -120,7 +122,6 @@ const ExperienceLadder = () => {
       className={styles.htmlWrapper}
     >
       <div ref={containerRef} className={styles.container}>
-        {/* LEFT SIDE: DETAILS */}
         <div className={styles.detailsWrapper}>
           {jobs.map((job, index) => (
             <div
@@ -131,20 +132,43 @@ const ExperienceLadder = () => {
               className={styles.detailCard}
             >
               <h2>{job.title}</h2>
-              <h4>{job.company}</h4>
+
+              {/* --- NEW: Clickable Company Link with External SVG Arrow --- */}
+              <h4>
+                <a
+                  href={job.url}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className={styles.companyLink}
+                >
+                  {job.company}
+                  <svg
+                    className={styles.linkIcon}
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  >
+                    <path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'></path>
+                    <polyline points='15 3 21 3 21 9'></polyline>
+                    <line x1='10' y1='14' x2='21' y2='3'></line>
+                  </svg>
+                </a>
+              </h4>
+
               <p>{job.details}</p>
             </div>
           ))}
         </div>
 
-        {/* RIGHT SIDE: ROCKET & LADDER */}
         <div className={styles.ladderLine} />
 
         <div ref={avatarRef} className={styles.rocket}>
           🚀
         </div>
 
-        {/* SMALL POPUP CARDS */}
         {jobs.map((job, index) => {
           const topPos = 90 - index * (80 / (jobs.length - 1));
           return (
